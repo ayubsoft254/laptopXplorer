@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Laptops</h1>
+  <ul>
+    {% for laptop in laptops %}
+      <li>
+        <a href="{% url 'laptop_detail' pk=laptop.pk %}">
+          {{ laptop.name }} - {{ laptop.brand }}
+        </a>
+        {% if laptop.avg_rating %}
+          (Average Rating: {{ laptop.avg_rating|floatformat:1 }})
+        {% else %}
+          (Not rated yet)
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

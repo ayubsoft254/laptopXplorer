@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>{{ laptop.name }}</h1>
+  <p>Brand: {{ laptop.brand }}</p>
+  <p>Price: ${{ laptop.price }}</p>
+  <h2>Specifications</h2>
+  <p>{{ laptop.specifications }}</p>
+  <h2>Review</h2>
+  <p>{{ laptop.review }}</p>
+  <p>Average Rating: {{ laptop.average_rating|floatformat:1 }}/5</p>
+  {% if laptop.image %}
+    <img src="{{ laptop.image.url }}" alt="{{ laptop.name }}">
+  {% endif %}
+  
+  {% if user.is_authenticated %}
+    <h3>Rate this laptop</h3>
+    <form method="post" action="{% url 'rate_laptop' pk=laptop.pk %}">
+      {% csrf_token %}
+      <select name="rating">
+        <option value="1" {% if user_rating.score == 1 %}selected{% endif %}>1</option>
+        <option value="2" {% if user_rating.score == 2 %}selected{% endif %}>2</option>
+        <option value="3" {% if user_rating.score == 3 %}selected{% endif %}>3</option>
+        <option value="4" {% if user_rating.score == 4 %}selected{% endif %}>4</option>
+        <option value="5" {% if user_rating.score == 5 %}selected{% endif %}>5</option>
+      </select>
+      <button type="submit">Submit Rating</button>
+    </form>
+  {% else %}
+    <p>Please <a href="{% url 'login' %}">log in</a> to rate this laptop.</p>
+  {% endif %}
+{% endblock %}
