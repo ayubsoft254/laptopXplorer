@@ -1,5 +1,6 @@
 from django.urls import path
+from .views import landing_view
 
 urlpatterns = [
-    # path('', admin.site.urls),
+    path('', landing_view, name='landing_view'),
 ]
