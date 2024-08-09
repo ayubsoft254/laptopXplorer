@@ -26,7 +26,17 @@
         </div>
         <div class="laptop-review">
             <h3>Review</h3>
-            <p>{{ laptop.review }}</p>
+            {% if laptop.rating_set.exists %}
+            <ul>
+                {% for rating in laptop.rating_set.all %}
+                    {% if rating.comment %}
+                        <li><strong>{{ rating.user.username }}:</strong> {{ rating.comment }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            {% else %}
+                <p>No reviews yet.</p>
+            {% endif %}
         </div>
     </div>
 

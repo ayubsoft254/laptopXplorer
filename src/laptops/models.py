@@ -17,8 +17,7 @@ class Laptop(models.Model):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name='laptops')
     model = models.CharField(max_length=100)
     specifications = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    review = models.TextField()    
+    price = models.DecimalField(max_digits=10, decimal_places=2)       
     image = models.ImageField(upload_to='staticfiles/img/laptop_imgs', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     average_rating = models.FloatField(default=0.0)  # Field to store the average rating
@@ -31,7 +30,14 @@ class Laptop(models.Model):
         ratings = self.rating_set.all()
         if ratings.exists():
             return ratings.aggregate(Avg('score'))['score__avg']
-        return None  
+        return None 
+
+    @property
+    def comments(self):
+        ratings = self.rating_set.all()
+        comments = [rating.comment for rating in ratings if rating.comment]
+        return " ".join(comments) if comments else "No reviews yet"    
+    
     
 class Rating(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
