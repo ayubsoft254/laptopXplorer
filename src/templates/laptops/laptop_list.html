@@ -28,6 +28,7 @@
           </a>
           <p>Model: {{ laptop.model }}</p>
           <p>Price: ${{ laptop.price }}</p>
+          <p>Ratings: {{ laptop.average_rating|default:"No ratings yet" }}</p>
       </li>
       {% empty %}
       <li>No laptops available.</li>
@@ -47,6 +48,7 @@
           </a>
           <p>Model: {{ latest_laptop.model }}</p>
           <p>Price: ${{ latest_laptop.price }}</p>
+          <p>Ratings: {{ laptop.average_rating|default:"No ratings yet" }}</p>
       </li>
       {% empty %}
       <li>No latest laptops available.</li>
