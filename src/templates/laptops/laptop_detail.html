@@ -32,22 +32,10 @@
 
     {% if user.is_authenticated %}
     <div class="rate-laptop">
-        <h3>Rate this Laptop</h3>
-        <form method="post" action="{% url 'rate_laptop' laptop.id %}">
-            {% csrf_token %}
-            <fieldset>
-                <legend>Score:</legend>
-                {% for i in '12345' %}
-                <label>
-                    <input type="radio" name="score" value="{{ i }}" required>
-                    {{ i }}
-                </label>
-                {% endfor %}
-            </fieldset>
-            <label for="comment">Comment:</label>
-            <textarea name="comment" id="comment"></textarea>
-            <button type="submit">Submit Rating</button>
-        </form>
+        <button hx-get="{% url 'laptop_rating_form' laptop.id %}" hx-target="#rating-form-container" hx-swap="innerHTML">
+            Rate this Laptop
+        </button>
+        <div id="rating-form-container"></div>
     </div>
     {% else %}
     <p><a href="{% url 'login' %}">Login</a> to rate this laptop.</p>

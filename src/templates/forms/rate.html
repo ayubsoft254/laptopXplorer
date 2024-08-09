@@ -1,0 +1,16 @@
+{% load static %}
+<form method="post" action="{% url 'rate_laptop' laptop.id %}" hx-target="#rating-form-container" hx-swap="innerHTML">
+    {% csrf_token %}
+    <fieldset>
+        <legend>Score:</legend>
+        {% for i in '12345' %}
+        <label>
+            <input type="radio" name="score" value="{{ i }}" required>
+            {{ i }}
+        </label>
+        {% endfor %}
+    </fieldset>
+    <label for="comment">Comment:</label>
+    <textarea name="comment" id="comment"></textarea>
+    <button type="submit">Submit Rating</button>
+</form>

@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Laptop, Brand, Rating
 from django.contrib.auth.decorators import login_required
+from .forms import RatingForm
 
 
 def landing_view(request):
@@ -55,3 +56,8 @@ def rate_laptop(request, laptop_id):
             pass
 
     return redirect('laptop_detail', laptop_id=laptop_id)
+
+def laptop_rating_form(request, laptop_id):
+    laptop = Laptop.objects.get(id=laptop_id)
+    form = RatingForm()
+    return render(request, 'forms/rate.html', {'laptop': laptop, 'form': form})
