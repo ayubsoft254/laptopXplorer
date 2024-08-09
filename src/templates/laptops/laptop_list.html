@@ -1,38 +1,59 @@
 {% extends "base.html" %}
+
 {% block body %}
-<h1>Laptops</h1>
-
 <div>
-  <h2>Featured Laptops</h2>
-  <ul>
-    {% for laptop in latest %}
+  <h2>Available Brands</h2>
+  <section>
+    <ul>
+      {% for brand in brands %}
       <li>
-        <a href="{% url 'laptop_detail' laptop.id %}">
-          {{ laptop.brand }} -{{laptop.name}} {{laptop.model}}
-        </a>
+          <a href="{% url 'laptops_by_brand' brand.id %}">
+              {{ brand.name }}
+          </a>
       </li>
-    {% endfor %}
-  <ul>
+      {% empty %}
+      <li>No brands available.</li>
+      {% endfor %}
+  </section>
 </div>
 
+<div>
+  <h1>Laptops</h1>
+  <section>
+    <ul>
+      {% for laptop in laptops %}
+      <li>
+          <a href="{% url 'laptop_detail' laptop.id %}">
+              {{ laptop.name }} - {{ laptop.brand.name }}
+          </a>
+          <p>Model: {{ laptop.model }}</p>
+          <p>Price: ${{ laptop.price }}</p>
+      </li>
+      {% empty %}
+      <li>No laptops available.</li>
+      {% endfor %}
+  </ul>  
+  </section>
+</div>
 
 <div>
-  <h2>All Laptops</h2>
-  <ul>
-    {% for laptop in laptops %}
+  <h2>Latest Laptops</h2>
+  <section>
+    <ul class="latest-laptops">
+      {% for latest_laptop in latest %}
       <li>
-        <a href="{% url 'laptop_detail' laptop.id %}">
-          {{ laptop.brand }} -{{laptop.name}} {{laptop.model}}
-        </a>
+          <a href="{% url 'laptop_detail' latest_laptop.id %}">
+              {{ latest_laptop.name }} - {{ latest_laptop.brand }}
+          </a>
+          <p>Model: {{ latest_laptop.model }}</p>
+          <p>Price: ${{ latest_laptop.price }}</p>
       </li>
-    {% endfor %}
+      {% empty %}
+      <li>No latest laptops available.</li>
+      {% endfor %}
   </ul>
+  </section>
 </div>
 
-<div>
-  <h2>Top Brands</h2> 
-   
-</div>
-  
 
-{% endblock body %}
+{% endblock %}
