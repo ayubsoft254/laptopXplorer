@@ -1,23 +1,42 @@
 {% extends "base.html" %}
+
 {% block body %}
-<h1>{{ laptop.name }}</h1>
-<p>Brand: {{ laptop.brand }}</p>
-<!-- Display ratings -->
-<h2>Ratings</h2>
-<ul>
-    {% for rating in ratings %}
-        <li>{{ rating.user.username }}: {{ rating.rating }} - {{ rating.comment }}</li>
+<div class="laptop-detail-container">
+    <h1>{{ laptop.name }}</h1>
+    <div class="laptop-brand-model">
+        <p><strong>Brand:</strong> {{ laptop.brand.name }}</p>
+        <p><strong>Model:</strong> {{ laptop.model }}</p>
+    </div>
+    
+    {% if laptop.image %}
+    <div class="laptop-image">
+        <img src="{{ laptop.image.url }}" alt="{{ laptop.name }}">
+    </div>
+    {% endif %}
+
+    <div class="laptop-specifications">
+        <h3>Specifications</h3>
+        <p>{{ laptop.specifications }}</p>
+    </div>
+
+    <div class="laptop-price-review">
+        <p><strong>Price:</strong> ${{ laptop.price }}</p>
+        <div class="laptop-review">
+            <h3>Review</h3>
+            <p>{{ laptop.review }}</p>
+        </div>
+    </div>
+</div>
+
+<h2>Other Recent Laptops</h2>
+<ul class="latest-laptops">
+    {% for latest_laptop in latest %}
+    <li>
+        <a href="{% url 'laptop_detail' latest_laptop.id %}">
+            <strong>{{ latest_laptop.name }}</strong> - {{ latest_laptop.brand.name }}
+        </a>
+        <p>{{ latest_laptop.model }} - ${{ latest_laptop.price }}</p>
+    </li>
     {% endfor %}
 </ul>
-<!-- Rating form -->
-{% if user.is_authenticated %}
-    <h2>Your Rating</h2>
-    <form method="post" action="{% url 'rate_laptop' laptop.id %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit Rating</button>
-    </form>
-{% else %}
-    <p><a href="{% url 'login' %}">Log in</a> to rate this laptop.</p>
-{% endif %}
-{% endblock body %}
+{% endblock %}

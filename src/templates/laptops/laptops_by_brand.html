@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block body %}
+<h1>{{ brand.name }} Laptops</h1>
+<ul>
+    {% for laptop in laptops %}
+    <li>
+        <a href="{% url 'laptop_detail' laptop.id %}">
+            {{ laptop.name }} - {{ laptop.model }}
+        </a>
+        <p>Price: ${{ laptop.price }}</p>
+    </li>
+    {% empty %}
+    <li>No laptops available for this brand.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
