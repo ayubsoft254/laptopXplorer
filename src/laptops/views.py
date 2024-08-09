@@ -1,5 +1,6 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Laptop, Brand
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Laptop, Brand, Rating
+from django.contrib.auth.decorators import login_required
 
 
 def landing_view(request):
@@ -35,3 +36,22 @@ def laptops_by_brand(request, brand_id):
     }
     return render(request, "laptops/laptops_by_brand.html", context)
 
+def rate_laptop(request, laptop_id):
+    laptop = get_object_or_404(Laptop, id=laptop_id)
+    if request.method == 'POST':
+        score = int(request.POST.get('score'))
+        comment = request.POST.get('comment', '')
+
+        # Ensure that the score is between 1 and 5
+        if 1 <= score <= 5:
+            rating, created = Rating.objects.update_or_create(
+                laptop=laptop,
+                user=request.user,
+                defaults={'score': score, 'comment': comment}
+            )
+            # Optionally, update the laptop's average rating here
+        else:
+            # Handle the case where the score is invalid
+            pass
+
+    return redirect('laptop_detail', laptop_id=laptop_id)

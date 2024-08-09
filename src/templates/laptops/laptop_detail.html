@@ -7,7 +7,7 @@
         <p><strong>Brand:</strong> {{ laptop.brand.name }}</p>
         <p><strong>Model:</strong> {{ laptop.model }}</p>
     </div>
-    
+
     {% if laptop.image %}
     <div class="laptop-image">
         <img src="{{ laptop.image.url }}" alt="{{ laptop.name }}">
@@ -21,15 +21,42 @@
 
     <div class="laptop-price-review">
         <p><strong>Price:</strong> ${{ laptop.price }}</p>
+        <div class="laptop-ratings">
+            <p><strong>Average Rating:</strong> {{ laptop.average_rating|default:"No ratings yet" }} stars</p>
+        </div>
         <div class="laptop-review">
             <h3>Review</h3>
             <p>{{ laptop.review }}</p>
         </div>
     </div>
+
+    {% if user.is_authenticated %}
+    <div class="rate-laptop">
+        <h3>Rate this Laptop</h3>
+        <form method="post" action="{% url 'rate_laptop' laptop.id %}">
+            {% csrf_token %}
+            <fieldset>
+                <legend>Score:</legend>
+                {% for i in '12345' %}
+                <label>
+                    <input type="radio" name="score" value="{{ i }}" required>
+                    {{ i }}
+                </label>
+                {% endfor %}
+            </fieldset>
+            <label for="comment">Comment:</label>
+            <textarea name="comment" id="comment"></textarea>
+            <button type="submit">Submit Rating</button>
+        </form>
+    </div>
+    {% else %}
+    <p><a href="{% url 'login' %}">Login</a> to rate this laptop.</p>
+    {% endif %}
 </div>
 
 <h2>Other Recent Laptops</h2>
 <ul class="latest-laptops">
+    {% if latest %}
     {% for latest_laptop in latest %}
     <li>
         <a href="{% url 'laptop_detail' latest_laptop.id %}">
@@ -38,5 +65,9 @@
         <p>{{ latest_laptop.model }} - ${{ latest_laptop.price }}</p>
     </li>
     {% endfor %}
+    {% else %}
+    <li>No recent laptops available.</li>
+    {% endif %}
 </ul>
+
 {% endblock %}

@@ -1,28 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Avg
+from django.core.exceptions import ValidationError
 
 # Create your models here.
-class Brand(models.Model):
-    """
-    Represents a laptop.
-
-    Attributes:
-        name (str): The name of the laptop.
-        brand (Brand): The brand of the laptop.
-        model (str): The model number of the laptop.
-        specifications (str): The specifications of the laptop.
-        price (Decimal): The price of the laptop.
-        review (str): A review of the laptop.
-        image (ImageField): An image of the laptop.
-        created_at (DateTime): The date and time the laptop was added.
-
-    Example:
-        >>> brand = Brand.objects.get(name="Apple")
-        >>> laptop = Laptop(name="MacBook Air", brand=brand, model="A1466", 
-                            specifications="Intel Core i5, 8GB RAM, 256GB SSD", 
-                            price=999.99, review="A great laptop for everyday use.")
-        >>> laptop.save()
-    """
+class Brand(models.Model):  
     name = models.CharField(max_length=100)
     description = models.TextField()
     image = models.ImageField(upload_to='staticfiles/img/brand_imgs', blank=True, null=True)    
@@ -39,6 +21,32 @@ class Laptop(models.Model):
     review = models.TextField()    
     image = models.ImageField(upload_to='staticfiles/img/laptop_imgs', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    average_rating = models.FloatField(default=0.0)  # Field to store the average rating
 
     def __str__(self):
-        return f"{self.name} ({self.brand.name})"
+        return self.name
+
+    @property
+    def average_rating(self):
+        ratings = self.rating_set.all()
+        if ratings.exists():
+            return ratings.aggregate(Avg('score'))['score__avg']
+        return None  
+    
+class Rating(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    laptop = models.ForeignKey(Laptop, on_delete=models.CASCADE)
+    score = models.PositiveIntegerField()
+    comment = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'laptop')
+
+    def __str__(self):
+        return f'{self.user.username} rated {self.laptop.name} with {self.score}'
+
+    def save(self, *args, **kwargs):
+        if not (1 <= self.score <= 5):
+            raise ValueError("Score must be between 1 and 5")
+        super().save(*args, **kwargs)
