@@ -1,0 +1,32 @@
+# components.yml
+
+# Version information
+version: 1.0
+
+# Grouping components by type
+components:
+  services:
+    auth-service:
+      host: auth.example.com
+      port: 8080
+      # Add more properties as needed
+
+    payment-service:
+      host: payment.example.com
+      port: 8081
+      # Add more properties as needed
+
+  databases:
+    user-database:
+      host: db.example.com
+      port: 5432
+      username: user
+      password: pass
+      # Add more properties as needed
+
+    order-database:
+      host: db.example.com
+      port: 5433
+      username: order
+      password: pass
+      # Add more properties as needed
