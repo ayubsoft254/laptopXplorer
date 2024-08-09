@@ -15,8 +15,10 @@ def laptops_list(request):
 
 def laptop_detail(request, laptop_id):
     laptop = get_object_or_404(Laptop, id=laptop_id)
+    latest = Laptop.objects.all().order_by('-created_at')[:6]
     context = {
-        'laptop': laptop,        
+        'laptop': laptop,
+        'latest':latest,        
     }
     return render(request, "laptops/laptop_detail.html", context)
 

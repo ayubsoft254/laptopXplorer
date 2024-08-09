@@ -1,13 +1,38 @@
 {% extends "base.html" %}
 {% block body %}
 <h1>Laptops</h1>
+
+<div>
+  <h2>Featured Laptops</h2>
+  <ul>
+    {% for laptop in latest %}
+      <li>
+        <a href="{% url 'laptop_detail' laptop.id %}">
+          {{ laptop.brand }} -{{laptop.name}} {{laptop.model}}
+        </a>
+      </li>
+    {% endfor %}
+  <ul>
+</div>
+
+
+<div>
+  <h2>All Laptops</h2>
   <ul>
     {% for laptop in laptops %}
       <li>
         <a href="{% url 'laptop_detail' laptop.id %}">
-          {{ laptop.name }} - {{ laptop.brand }}
+          {{ laptop.brand }} -{{laptop.name}} {{laptop.model}}
         </a>
       </li>
     {% endfor %}
   </ul>
+</div>
+
+<div>
+  <h2>Top Brands</h2> 
+   
+</div>
+  
+
 {% endblock body %}
