@@ -13,15 +13,3 @@ class Laptop(models.Model):
 
     def __str__(self):
         return self.name
-
-class Rating(models.Model):
-    laptop = models.ForeignKey(Laptop, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    rating = models.PositiveIntegerField()  # Ratings from 1 to 5, for example
-    comment = models.TextField(blank=True, null=True)  # Optional comments
-
-    class Meta:
-        unique_together = ('laptop', 'user')
-
-    def __str__(self):
-        return self.name

@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Laptop, Rating
+from .models import Laptop
 
 # Register your models here.
 admin.site.register(Laptop)
-admin.site.register(Rating)
