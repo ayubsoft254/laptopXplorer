@@ -24,7 +24,8 @@ def laptop_detail(request, laptop_id):
     latest = Laptop.objects.all().order_by('-created_at')[:4]
     context = {
         'laptop': laptop,
-        'latest':latest,        
+        'latest':latest,
+        'user': request.user,        
     }
     return render(request, "laptops/laptop_detail.html", context)
 

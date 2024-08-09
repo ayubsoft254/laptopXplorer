@@ -27,13 +27,13 @@
         <div class="laptop-review">
             <h3>Review</h3>
             {% if laptop.rating_set.exists %}
-                <ul>
-                    {% for rating in laptop.rating_set.all %}
-                        {% if rating.comment %}
-                            <li><strong>{{ rating.user.username }}:</strong> {{ rating.comment }}</li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
+            <ul>
+                {% for rating in laptop.rating_set.all %}
+                    {% if rating.comment %}
+                        <li><strong>{{ rating.user.username }}:</strong> {{ rating.comment }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
             {% else %}
                 <p>No reviews yet.</p>
             {% endif %}
@@ -42,25 +42,13 @@
 
     {% if user.is_authenticated %}
     <div class="rate-laptop">
-        <h3>Rate this Laptop</h3>
-        <form method="post" action="{% url 'rate_laptop' laptop.id %}">
-            {% csrf_token %}
-            <fieldset>
-                <legend>Score:</legend>
-                {% for i in '12345' %}
-                <label>
-                    <input type="radio" name="score" value="{{ i }}" required>
-                    {{ i }}
-                </label>
-                {% endfor %}
-            </fieldset>
-            <label for="comment">Comment:</label>
-            <textarea name="comment" id="comment"></textarea>
-            <button type="submit">Submit Rating</button>
-        </form>
+        <button hx-get="{% url 'laptop_rating_form' laptop.id %}" hx-target="#rating-form-container" hx-swap="innerHTML">
+            Rate this Laptop
+        </button>
+        <div id="rating-form-container"></div>
     </div>
     {% else %}
-    <p><a href="{% url 'login' %}">Login</a> to rate this laptop.</p>
+    <p><a href="{% url 'landing_view' %}">Login</a> to rate this laptop.</p>
     {% endif %}
 </div>
 
