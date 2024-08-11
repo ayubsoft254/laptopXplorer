@@ -3,7 +3,6 @@ from .models import Laptop, Brand, Rating
 from django.contrib.auth.decorators import login_required
 from .forms import RatingForm
 
-
 def landing_view(request):
     return render(request, "land.html", {})
 
@@ -50,10 +49,8 @@ def rate_laptop(request, laptop_id):
                 laptop=laptop,
                 user=request.user,
                 defaults={'score': score, 'comment': comment}
-            )
-            # Optionally, update the laptop's average rating here
-        else:
-            # Handle the case where the score is invalid
+            )            
+        else:                        
             pass
 
     return redirect('laptop_detail', laptop_id=laptop_id)
