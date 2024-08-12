@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Laptop, Brand, Rating
 from django.contrib.auth.decorators import login_required
 from .forms import RatingForm
+from django.contrib import messages
 
 def landing_view(request):
     return render(request, "land.html", {})
@@ -50,8 +51,8 @@ def rate_laptop(request, laptop_id):
                 user=request.user,
                 defaults={'score': score, 'comment': comment}
             )            
-        else:                        
-            pass
+        else:
+            messages.error(request, 'Invalid score. Please enter a score between 1 and 5.')            
 
     return redirect('laptop_detail', laptop_id=laptop_id)
 
