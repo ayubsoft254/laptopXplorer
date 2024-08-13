@@ -63,7 +63,7 @@ def laptop_rating_form(request, laptop_id):
     return render(request, 'forms/rate.html', {'laptop': laptop, 'form': form})
 
 def laptop_search(request):
-    query = request.GET.get('q')
+    query = request.GET.get('q', '')
     results = []
 
     if query:
@@ -73,7 +73,7 @@ def laptop_search(request):
             Q(model__icontains=query)
         )
 
-    if request.headers.get('Hx-Request'):  # Check if it's an HTMX request
-        return render(request, 'laptops/partials/search_results.html', {'results': results, 'query': query})
-    else:
-        return render(request, 'laptops/laptop_search.html', {'results': results, 'query': query})
+    if request.headers.get('Hx-Request'):  # HTMX request
+        return render(request, 'laptops/searchresults.html', {'results': results, 'query': query})
+    else:  # Regular request
+        return render(request, 'laptops/searchresults.html', {'results': results, 'query': query})
