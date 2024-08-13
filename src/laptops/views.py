@@ -3,6 +3,7 @@ from .models import Laptop, Brand, Rating
 from django.contrib.auth.decorators import login_required
 from .forms import RatingForm
 from django.contrib import messages
+from django.db.models import Q
 
 def landing_view(request):
     return render(request, "land.html", {})
@@ -60,3 +61,19 @@ def laptop_rating_form(request, laptop_id):
     laptop = Laptop.objects.get(id=laptop_id)
     form = RatingForm()
     return render(request, 'forms/rate.html', {'laptop': laptop, 'form': form})
+
+def laptop_search(request):
+    query = request.GET.get('q')
+    results = []
+
+    if query:
+        results = Laptop.objects.filter(
+            Q(name__icontains=query) |
+            Q(brand__name__icontains=query) |
+            Q(model__icontains=query)
+        )
+
+    if request.headers.get('Hx-Request'):  # Check if it's an HTMX request
+        return render(request, 'laptops/partials/search_results.html', {'results': results, 'query': query})
+    else:
+        return render(request, 'laptops/laptop_search.html', {'results': results, 'query': query})

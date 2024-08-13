@@ -1,7 +1,7 @@
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import landing_view, laptops_list, laptop_detail, laptops_by_brand, rate_laptop,laptop_rating_form
+from .views import landing_view, laptops_list, laptop_detail, laptops_by_brand, rate_laptop,laptop_rating_form,laptop_search
 
 urlpatterns = [
     path('', landing_view, name='landing_view'),
@@ -10,6 +10,7 @@ urlpatterns = [
     path('brand/<int:brand_id>/', laptops_by_brand, name='laptops_by_brand'),
     path('rate/<int:laptop_id>/', rate_laptop, name='rate_laptop'),
     path('laptop/<int:laptop_id>/rating-form/', laptop_rating_form, name='laptop_rating_form'),
+    path('search/', laptop_search, name='laptop_search'),
 
 ]
 

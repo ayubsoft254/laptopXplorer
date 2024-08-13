@@ -1,6 +1,15 @@
 {% extends "base.html" %}
 
 {% block body %}
+<form method="GET" action="{% url 'laptop_search' %}" hx-get="{% url 'laptop_search' %}" hx-target="#search-results" hx-trigger="keyup changed delay:500ms">
+  <input type="text" name="q" placeholder="Search for laptops..." required>
+  <button type="submit">Search</button>
+</form>
+
+<div id="search-results">
+  <!-- Search results will be loaded here by HTMX -->
+</div>
+
 <div>
   <strong><h2>Available Brands</h2></strong>
   <section style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
