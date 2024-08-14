@@ -1,6 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Laptop, Brand, Rating
-from django.contrib.auth.decorators import login_required
 from .forms import RatingForm
 from django.contrib import messages
 from django.db.models import Q
@@ -73,7 +72,5 @@ def laptop_search(request):
             Q(model__icontains=query)
         )
 
-    if request.headers.get('Hx-Request'):  # HTMX request
-        return render(request, 'laptops/searchresults.html', {'results': results, 'query': query})
-    else:  # Regular request
-        return render(request, 'laptops/searchresults.html', {'results': results, 'query': query})
+     
+    return render(request, 'laptops/searchresults.html', {'results': results, 'query': query})    
