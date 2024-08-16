@@ -43,8 +43,7 @@ def rate_laptop(request, laptop_id):
     if request.method == 'POST':
         score = int(request.POST.get('score'))
         comment = request.POST.get('comment', '')
-
-        # Ensure that the score is between 1 and 5
+       
         if 1 <= score <= 5:
             rating, created = Rating.objects.update_or_create(
                 laptop=laptop,

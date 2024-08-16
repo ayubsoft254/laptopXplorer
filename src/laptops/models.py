@@ -27,7 +27,7 @@ class Laptop(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)       
     image = models.ImageField(upload_to='staticfiles/img/laptop_imgs', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    average_rating = models.FloatField(default=0.0)  # Field to store the average rating
+    average_rating = models.FloatField(default=0.0)  
 
     def __str__(self):
         return self.name
