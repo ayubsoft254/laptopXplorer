@@ -72,4 +72,7 @@ def laptop_search(request):
         )
 
      
-    return render(request, 'laptops/searchresults.html', {'results': results, 'query': query})    
+    return render(request, 'laptops/searchresults.html', {'results': results, 'query': query})
+
+def about_view(request):
+    return render(request, 'about.html')    
