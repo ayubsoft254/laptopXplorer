@@ -75,4 +75,7 @@ def laptop_search(request):
     return render(request, 'laptops/searchresults.html', {'results': results, 'query': query})
 
 def about_view(request):
-    return render(request, 'about.html')    
+    return render(request, 'about.html')
+
+def contact_view(request):
+    return render (request, 'contact.html')  
