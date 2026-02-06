@@ -1,7 +1,0 @@
-Django==5.0.7
-django-allauth[socialaccount]
-django-allauth-ui
-django-widget-tweaks
-slippers
-pillow
-python-decouple
