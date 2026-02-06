@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Brand, Category, Processor, Laptop, Review, Article
+from .models import Brand, Category, Processor, Laptop, Review, Article, PriceHistory, PriceAlert
 
 
 @admin.register(Brand)
@@ -107,6 +107,51 @@ class ArticleAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'updated_at', 'views', 'likes']
     list_editable = ['published', 'featured']
     list_per_page = 25
+    
+
+@admin.register(PriceHistory)
+class PriceHistoryAdmin(admin.ModelAdmin):
+    list_display = ['laptop', 'price', 'retailer', 'in_stock', 'recorded_at']
+    list_filter = ['retailer', 'in_stock', 'recorded_at']
+    search_fields = ['laptop__name', 'laptop__brand__name']
+    readonly_fields = ['recorded_at']
+    date_hierarchy = 'recorded_at'
+    list_per_page = 50
+    
+    fieldsets = (
+        ('Laptop Information', {
+            'fields': ('laptop',)
+        }),
+        ('Price Details', {
+            'fields': ('price', 'retailer', 'retailer_url', 'in_stock')
+        }),
+        ('Timestamp', {
+            'fields': ('recorded_at',)
+        }),
+    )
+
+
+@admin.register(PriceAlert)
+class PriceAlertAdmin(admin.ModelAdmin):
+    list_display = ['user', 'laptop', 'target_price', 'retailer', 'active', 'created_at', 'last_notified']
+    list_filter = ['active', 'retailer', 'created_at']
+    search_fields = ['user__email', 'laptop__name']
+    readonly_fields = ['created_at', 'last_notified']
+    list_editable = ['active']
+    list_per_page = 50
+    
+    fieldsets = (
+        ('Alert Information', {
+            'fields': ('user', 'laptop', 'target_price', 'retailer')
+        }),
+        ('Status', {
+            'fields': ('active',)
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'last_notified'),
+            'classes': ('collapse',)
+        }),
+    )
     
     fieldsets = (
         ('Article Information', {

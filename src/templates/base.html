@@ -18,8 +18,51 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         
+        /* Dark Mode CSS Variables */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --bg-tertiary: #f3f4f6;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            --card-bg: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+        
+        [data-theme="dark"] {
+            --bg-primary: #1f2937;
+            --bg-secondary: #111827;
+            --bg-tertiary: #374151;
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+            --border-color: #374151;
+            --card-bg: #1f2937;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Apply dark mode styles */
         body {
             font-family: 'Inter', sans-serif;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        .bg-white { background-color: var(--card-bg) !important; }
+        .bg-gray-50 { background-color: var(--bg-secondary) !important; }
+        .bg-gray-100 { background-color: var(--bg-tertiary) !important; }
+        .text-gray-900 { color: var(--text-primary) !important; }
+        .text-gray-700 { color: var(--text-primary) !important; }
+        .text-gray-600 { color: var(--text-secondary) !important; }
+        .border-gray-200 { border-color: var(--border-color) !important; }
+        .border-gray-300 { border-color: var(--border-color) !important; }
+        
+        [data-theme="dark"] .shadow-lg,
+        [data-theme="dark"] .shadow-md,
+        [data-theme="dark"] .shadow-xl,
+        [data-theme="dark"] .shadow-2xl {
+            box-shadow: 0 0 20px var(--shadow);
         }
         
         .gradient-bg {
@@ -32,6 +75,37 @@
         
         .hover-scale:hover {
             transform: scale(1.05);
+        }
+        
+        /* Theme toggle button */
+        .theme-toggle {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: var(--bg-tertiary);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .theme-toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            transition: transform 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+        
+        [data-theme="dark"] .theme-toggle-slider {
+            transform: translateX(30px);
         }
     </style>
     
@@ -67,7 +141,7 @@
                     </div>
                 </div>
                 
-                <!-- Right side: Search + User Menu -->
+                <!-- Right side: Search + Theme + User Menu -->
                 <div class="flex items-center space-x-4">
                     <!-- Search Bar (Desktop) -->
                     <div class="hidden md:block">
@@ -80,6 +154,13 @@
                                 </button>
                             </div>
                         </form>
+                    </div>
+                    
+                    <!-- Dark Mode Toggle -->
+                    <div class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
+                        <div class="theme-toggle-slider">
+                            <i class="fas fa-moon" id="theme-icon"></i>
+                        </div>
                     </div>
                     
                     <!-- User Menu -->
@@ -225,10 +306,42 @@
 
     <!-- JavaScript -->
     <script>
+        // Dark Mode Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update icon
+            const icon = document.getElementById('theme-icon');
+            icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+        
+        // Initialize theme on page load
+        (function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+            
+            document.documentElement.setAttribute('data-theme', theme);
+            
+            // Update icon
+            const icon = document.getElementById('theme-icon');
+            if (icon) {
+                icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+        })();
+        
         // Mobile menu toggle
-        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        });
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', function() {
+                document.getElementById('mobile-menu').classList.toggle('hidden');
+            });
+        }
     </script>
     
     {% block extra_js %}{% endblock %}

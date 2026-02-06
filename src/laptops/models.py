@@ -226,6 +226,36 @@ class Laptop(models.Model):
     def review_count(self):
         """Get total number of reviews"""
         return self.reviews.count()
+    
+    @property
+    def lowest_price_ever(self):
+        """Get the lowest price from price history"""
+        history = self.price_history.all()
+        if history.exists():
+            return min(h.price for h in history)
+        return self.price
+    
+    @property
+    def price_trend(self):
+        """Get price trend: 'up', 'down', or 'stable'"""
+        recent = self.price_history.all()[:2]
+        if len(recent) >= 2:
+            if recent[0].price < recent[1].price:
+                return 'down'
+            elif recent[0].price > recent[1].price:
+                return 'up'
+        return 'stable'
+    
+    @property
+    def price_change_percentage(self):
+        """Get price change percentage from previous record"""
+        recent = self.price_history.all()[:2]
+        if len(recent) >= 2:
+            old_price = float(recent[1].price)
+            new_price = float(recent[0].price)
+            if old_price > 0:
+                return ((new_price - old_price) / old_price) * 100
+        return 0
 
 
 class Review(models.Model):
@@ -300,3 +330,55 @@ class Article(models.Model):
     def formatted_read_time(self):
         """Return formatted read time"""
         return f"{self.read_time} min read"
+
+
+# Price Tracking Models
+from django.utils import timezone
+
+class PriceHistory(models.Model):
+    """Track price changes over time"""
+    RETAILERS = [
+        ('amazon', 'Amazon'),
+        ('bestbuy', 'Best Buy'),
+        ('newegg', 'Newegg'),
+        ('walmart', 'Walmart'),
+        ('direct', 'Direct from Manufacturer'),
+        ('other', 'Other'),
+    ]
+    
+    laptop = models.ForeignKey(Laptop, on_delete=models.CASCADE, related_name='price_history')
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    retailer = models.CharField(max_length=20, choices=RETAILERS, default='direct')
+    retailer_url = models.URLField(blank=True, help_text="Affiliate link")
+    in_stock = models.BooleanField(default=True)
+    recorded_at = models.DateTimeField(default=timezone.now)
+    
+    class Meta:
+        ordering = ['-recorded_at']
+        verbose_name_plural = 'Price Histories'
+        indexes = [
+            models.Index(fields=['laptop', '-recorded_at']),
+        ]
+    
+    def __str__(self):
+        return f"{self.laptop.name} - ${self.price} ({self.recorded_at.date()})"
+
+
+class PriceAlert(models.Model):
+    """User subscriptions for price drop alerts"""
+    from django.contrib.auth.models import User
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='price_alerts')
+    laptop = models.ForeignKey(Laptop, on_delete=models.CASCADE, related_name='price_alerts')
+    target_price = models.DecimalField(max_digits=10, decimal_places=2, help_text="Alert when price drops below this")
+    retailer = models.CharField(max_length=20, choices=PriceHistory.RETAILERS, blank=True, help_text="Specific retailer or any")
+    active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_notified = models.DateTimeField(null=True, blank=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        unique_together = ['user', 'laptop', 'retailer']
+    
+    def __str__(self):
+        return f"{self.user.email} - {self.laptop.name} @ ${self.target_price}"
