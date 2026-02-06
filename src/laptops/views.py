@@ -132,7 +132,15 @@ def brand_detail(request, slug):
 
 def compare_laptops(request):
     """Compare multiple laptops side by side"""
-    laptop_ids = request.GET.getlist('ids')
+    # Get IDs from query string - can be comma-separated or multiple params
+    ids_param = request.GET.get('ids', '')
+    
+    if ',' in ids_param:
+        # Comma-separated IDs (e.g., ?ids=1,2,3)
+        laptop_ids = [id.strip() for id in ids_param.split(',') if id.strip()]
+    else:
+        # Multiple id parameters (e.g., ?ids=1&ids=2&ids=3)
+        laptop_ids = request.GET.getlist('ids')
     
     if not laptop_ids:
         return redirect('laptops:laptop_list')
