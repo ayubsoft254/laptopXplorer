@@ -159,6 +159,45 @@ def brand_detail(request, slug):
     return render(request, 'laptops/brand_detail.html', context)
 
 
+def article_list(request):
+    """Display all published articles"""
+    articles = Article.objects.select_related('laptop', 'laptop__brand').filter(published=True)
+    
+    # Pagination
+    paginator = Paginator(articles, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'page_obj': page_obj,
+    }
+    
+    return render(request, 'laptops/article_list.html', context)
+
+
+def article_detail(request, slug):
+    """Display single article"""
+    article = get_object_or_404(
+        Article.objects.select_related('laptop', 'laptop__brand'),
+        slug=slug,
+        published=True
+    )
+    
+    # Increment views
+    article.views += 1
+    article.save(update_fields=['views'])
+    
+    # Get related articles (same laptop or recent)
+    related_articles = Article.objects.filter(published=True).exclude(id=article.id).select_related('laptop', 'laptop__brand')[:3]
+    
+    context = {
+        'article': article,
+        'related_articles': related_articles,
+    }
+    
+    return render(request, 'laptops/article_detail.html', context)
+
+
 def compare_laptops(request):
     """Compare multiple laptops side by side"""
     # Get IDs from query string - can be comma-separated or multiple params
