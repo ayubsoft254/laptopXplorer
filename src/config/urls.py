@@ -24,6 +24,7 @@ urlpatterns = [
     path('', include('core.urls')),
     path('laptops/', include('laptops.urls')),
     path('accounts/', include('accounts.urls')),
+    path('accounts/', include('allauth.urls')),  # Add allauth URLs
 ]
 
 # Serve media files in development

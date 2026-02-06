@@ -8,6 +8,9 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Alpine.js for interactive components -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -67,17 +70,80 @@
                     </div>
                 </div>
                 
-                <!-- Search Bar -->
-                <div class="hidden sm:ml-6 sm:flex sm:items-center flex-1 max-w-md mx-4">
-                    <form action="{% url 'laptops:laptop_list' %}" method="get" class="w-full">
-                        <div class="relative">
-                            <input type="text" name="q" placeholder="Search laptops..." 
-                                   class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent">
-                            <button type="submit" class="absolute right-2 top-2 text-gray-400 hover:text-purple-600">
-                                <i class="fas fa-search"></i>
-                            </button>
+                <!-- Right side: Search + User Menu -->
+                <div class="flex items-center space-x-4">
+                    <!-- Search Bar (Desktop) -->
+                    <div class="hidden md:block">
+                        <form action="{% url 'laptops:laptop_list' %}" method="get">
+                            <div class="relative">
+                                <input type="text" name="q" placeholder="Search laptops..." 
+                                       class="w-64 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600">
+                                <button type="submit" class="absolute right-2 top-2.5 text-gray-400 hover:text-purple-600">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- User Menu -->
+                    {% if user.is_authenticated %}
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                            {% if user.profile.avatar %}
+                            <img src="{{ user.profile.avatar.url }}" alt="{{ user.email }}" class="w-8 h-8 rounded-full object-cover">
+                            {% else %}
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center text-white font-bold">
+                                {{ user.email.0|upper }}
+                            </div>
+                            {% endif %}
+                            <span class="hidden md:block text-sm font-medium text-gray-700">{{ user.email|truncatechars:20 }}</span>
+                            <i class="fas fa-chevron-down text-xs text-gray-500"></i>
+                        </button>
+                        
+                        <!-- Dropdown Menu -->
+                        <div x-show="open" @click.away="open = false" 
+                             x-transition:enter="transition ease-out duration-100"
+                             x-transition:enter-start="transform opacity-0 scale-95"
+                             x-transition:enter-end="transform opacity-100 scale-100"
+                             x-transition:leave="transition ease-in duration-75"
+                             x-transition:leave-start="transform opacity-100 scale-100"
+                             x-transition:leave-end="transform opacity-0 scale-95"
+                             class="absolute right-0 mt-2 w-56 rounded-lg shadow-xl bg-white ring-1 ring-black ring-opacity-5 z-50">
+                            <div class="py-1">
+                                <a href="{% url 'accounts:dashboard' %}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">
+                                    <i class="fas fa-tachometer-alt w-5 text-purple-600"></i>
+                                    Dashboard
+                                </a>
+                                <a href="{% url 'accounts:profile' %}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">
+                                    <i class="fas fa-user w-5 text-purple-600"></i>
+                                    My Profile
+                                </a>
+                                <a href="{% url 'accounts:favorites' %}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">
+                                    <i class="fas fa-heart w-5 text-purple-600"></i>
+                                    Favorites <span class="ml-auto text-xs bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full">{{ user.profile.favorites_count }}</span>
+                                </a>
+                                <div class="border-t border-gray-100"></div>
+                                {% if user.is_staff %}
+                                <a href="/admin/" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">
+                                    <i class="fas fa-cog w-5 text-purple-600"></i>
+                                    Admin Panel
+                                </a>
+                                {% endif %}
+                                <a href="{% url 'account_logout' %}" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                    <i class="fas fa-sign-out-alt w-5"></i>
+                                    Sign Out
+                                </a>
+                            </div>
                         </div>
-                    </form>
+                    </div>
+                    {% else %}
+                    <a href="{% url 'account_login' %}" class="hidden sm:block px-4 py-2 text-purple-600 hover:text-purple-700 font-medium">
+                        Sign In
+                    </a>
+                    <a href="{% url 'account_signup' %}" class="hidden sm:block px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition font-medium">
+                        Sign Up
+                    </a>
+                    {% endif %}
                 </div>
                 
                 <!-- Mobile menu button -->
