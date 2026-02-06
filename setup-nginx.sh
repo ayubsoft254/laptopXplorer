@@ -26,7 +26,7 @@ echo ""
 
 echo "Step 2: Creating nginx configuration..."
 
-# Create nginx config with correct paths
+# Create nginx config with ACTUAL paths (not placeholders)
 sudo tee /etc/nginx/sites-available/laptopxplorer > /dev/null <<EOF
 server {
     listen 80;
@@ -44,14 +44,14 @@ server {
         proxy_redirect off;
     }
 
-    # Static files
+    # Static files - ACTUAL PATH (not placeholder)
     location /static/ {
         alias $SCRIPT_DIR/staticfiles/;
         expires 30d;
         add_header Cache-Control "public, immutable";
     }
 
-    # Media files
+    # Media files - ACTUAL PATH (not placeholder)
     location /media/ {
         alias $SCRIPT_DIR/mediafiles/;
         expires 30d;
@@ -61,6 +61,10 @@ server {
 EOF
 
 echo "✅ Created /etc/nginx/sites-available/laptopxplorer"
+echo ""
+echo "Configuration uses ACTUAL paths:"
+echo "   Static: $SCRIPT_DIR/staticfiles/"
+echo "   Media:  $SCRIPT_DIR/mediafiles/"
 echo ""
 
 echo "Step 3: Enabling site..."
@@ -111,6 +115,8 @@ echo "  NGINX SETUP COMPLETE!"
 echo "========================================"
 echo ""
 echo "✅ Nginx is configured and running"
+echo "✅ Static files path: $SCRIPT_DIR/staticfiles/"
+echo "✅ Media files path:  $SCRIPT_DIR/mediafiles/"
 echo ""
 echo "🌐 Test Access:"
 echo "   http://laptopxplorer.ayubsoft-inc.systems"
