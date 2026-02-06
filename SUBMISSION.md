@@ -40,13 +40,17 @@ This project represents a complete journey from concept to production deployment
 ![Homepage with gradient hero section and featured laptops](https://drive.google.com/uc?export=view&id=1wODgNBIKH8nWuPpBk7_hHBDAXoUGl7Oa)
 
 **Laptop Detail - Multi-Image Gallery**
-[View Screenshot](https://imgur.com/a/sMdJZ4x)
+
+![laptop description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/7bpm6n9gbjkzcsrxj3gn.png)
 
 **Article System**
-[View Screenshot](https://imgur.com/a/f2ufqr3)
+
+![articles](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/h6c7c1dtrjuloq4bebpb.png)
 
 **Admin Panel**
-[View Screenshot](https://imgur.com/a/gjXTMie)
+
+![Django admin panel](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/ifxyjqnpc92pie2zws9x.png)
+
 
 ### 🎥 Video Walkthrough
 [Link to video demo or GIF walkthrough]
