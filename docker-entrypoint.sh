@@ -17,6 +17,12 @@ if [ "$DATABASE_URL" != "sqlite:///db.sqlite3" ]; then
     echo "PostgreSQL started"
 fi
 
+# For SQLite, remove corrupted database to start fresh
+if [ "$DATABASE_URL" = "sqlite:///db.sqlite3" ] && [ -f "/app/src/db.sqlite3" ]; then
+    echo "Removing old SQLite database to resolve migration conflicts..."
+    rm -f /app/src/db.sqlite3
+fi
+
 # Run migrations
 echo "Running migrations..."
 python manage.py migrate --noinput
