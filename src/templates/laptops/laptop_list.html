@@ -146,11 +146,8 @@
                         </a>
                         
                         <div class="p-4">
-                            <div class="flex items-center justify-between mb-2">
+                            <div class="mb-2">
                                 <span class="text-xs font-semibold text-purple-600">{{ laptop.brand.name }}</span>
-                                {% if not laptop.in_stock %}
-                                <span class="text-xs bg-red-100 text-red-600 px-2 py-1 rounded">Out of Stock</span>
-                                {% endif %}
                             </div>
                             
                             <h3 class="text-lg font-bold text-gray-900 mb-2 line-clamp-2">

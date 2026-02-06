@@ -219,18 +219,6 @@
                         </td>
                         {% endfor %}
                     </tr>
-                    <tr class="bg-gray-50">
-                        <td class="px-6 py-3 text-sm text-gray-600 sticky left-0 bg-gray-50 z-10">Availability</td>
-                        {% for laptop in laptops %}
-                        <td class="px-6 py-3 text-sm text-center">
-                            {% if laptop.in_stock %}
-                            <span class="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs">In Stock</span>
-                            {% else %}
-                            <span class="inline-block bg-red-100 text-red-800 px-3 py-1 rounded-full text-xs">Out of Stock</span>
-                            {% endif %}
-                        </td>
-                        {% endfor %}
-                    </tr>
                 </tbody>
             </table>
         </div>
