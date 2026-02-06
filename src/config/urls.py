@@ -18,6 +18,18 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.sitemaps.views import sitemap
+from laptops.sitemaps import LaptopSitemap, BrandSitemap, CategorySitemap, ArticleSitemap, StaticViewSitemap
+from laptops.views import robots_txt
+
+# Define all sitemaps
+sitemaps = {
+    'laptops': LaptopSitemap,
+    'brands': BrandSitemap,
+    'categories': CategorySitemap,
+    'articles': ArticleSitemap,
+    'static': StaticViewSitemap,
+}
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,6 +37,10 @@ urlpatterns = [
     path('laptops/', include('laptops.urls')),
     path('accounts/', include('accounts.urls')),
     path('accounts/', include('allauth.urls')),  # Add allauth URLs
+    
+    # SEO URLs
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    path('robots.txt', robots_txt, name='robots_txt'),
 ]
 
 # Serve media files in development

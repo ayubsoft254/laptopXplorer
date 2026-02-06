@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+# Disallow admin and user account pages
+Disallow: /admin/
+Disallow: /accounts/login/
+Disallow: /accounts/signup/
+Disallow: /accounts/password/
+
+# Allow all laptops, brands, and articles
+Allow: /laptops/
+Allow: /articles/
+
+# Sitemap location
+Sitemap: http://localhost:8000/sitemap.xml

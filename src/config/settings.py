@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',  # Required for allauth
+    'django.contrib.sitemaps',  # For XML sitemaps (SEO)
     
     # Third-party apps
     'allauth',

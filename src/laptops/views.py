@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q, Min, Max
 from django.core.paginator import Paginator
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from .models import Laptop, Brand, Category, Processor, Article
 
 
@@ -273,6 +273,28 @@ def autocomplete_search(request):
             })
     
     return JsonResponse({'suggestions': suggestions})
+
+
+def robots_txt(request):
+    """Serve robots.txt dynamically"""
+    lines = [
+        "User-agent: *",
+        "Allow: /",
+        "",
+        "# Disallow admin and user account pages",
+        "Disallow: /admin/",
+        "Disallow: /accounts/login/",
+        "Disallow: /accounts/signup/",
+        "Disallow: /accounts/password/",
+        "",
+        "# Allow all laptops, brands, and articles",
+        "Allow: /laptops/",
+        "Allow: /articles/",
+        "",
+        "# Sitemap location",
+        f"Sitemap: {request.scheme}://{request.get_host()}/sitemap.xml",
+    ]
+    return HttpResponse("\n".join(lines), content_type="text/plain")
 
 
 def article_list(request):

@@ -5,6 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}LaptopXplorer - Find Your Perfect Laptop{% endblock %}</title>
     
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="{% block meta_description %}LaptopXplorer - Compare and find the perfect laptop. Read reviews, check specs, and get the best deals on gaming, business, and ultrabook laptops.{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}laptop, laptop reviews, laptop specs, compare laptops, buy laptop, gaming laptop, business laptop, ultrabook{% endblock %}">
+    <meta name="author" content="LaptopXplorer">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Meta Tags (Facebook, LinkedIn) -->
+    <meta property="og:title" content="{% block og_title %}{% block title_text %}LaptopXplorer - Find Your Perfect Laptop{% endblock %}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Compare and find the perfect laptop with expert reviews and detailed specs.{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}/static/og-image.jpg{% endblock %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:site_name" content="LaptopXplorer">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}{% block title_text %}LaptopXplorer - Find Your Perfect Laptop{% endblock %}{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Compare and find the perfect laptop with expert reviews and detailed specs.{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}/static/og-image.jpg{% endblock %}">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock %}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -13,6 +39,24 @@
     
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Structured Data (Schema.org JSON-LD) -->
+    {% block structured_data %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "LaptopXplorer",
+      "url": "{{ request.scheme }}://{{ request.get_host }}",
+      "logo": "{{ request.scheme }}://{{ request.get_host }}/static/logo.png",
+      "description": "Expert laptop reviews, comparisons, and buying guides",
+      "sameAs": [
+        "https://twitter.com/laptopxplorer",
+        "https://facebook.com/laptopxplorer"
+      ]
+    }
+    </script>
+    {% endblock %}
     
     <!-- Custom CSS -->
     <style>

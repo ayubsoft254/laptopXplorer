@@ -1,6 +1,26 @@
 {% extends 'base.html' %}
+{% load seo_tags %}
 
-{% block title %}{{ laptop.full_name }} - LaptopXplorer{% endblock %}
+{% block title %}{{ laptop.full_name }} - Review & Specs | LaptopXplorer{% endblock %}
+
+{% block meta_description %}{{ laptop.get_meta_description }}{% endblock %}
+
+{% block meta_keywords %}{{ laptop|to_keywords }}{% endblock %}
+
+{% block og_title %}{{ laptop.full_name }} - {{ laptop.price }} {{ laptop.currency }}{% endblock %}
+
+{% block og_description %}{{ laptop.get_meta_description }}{% endblock %}
+
+{% block og_image %}{% if laptop.primary_image %}{{ request.scheme }}://{{ request.get_host }}{{ laptop.primary_image.url }}{% endif %}{% endblock %}
+
+{% block og_type %}product{% endblock %}
+
+{% block canonical_url %}{{ request.scheme }}://{{ request.get_host }}{{ laptop.get_absolute_url }}{% endblock %}
+
+{% block structured_data %}
+{{ block.super }}
+{% schema_org_json laptop.get_schema_org_data %}
+{% endblock %}
 
 {% block content %}
 <div class="bg-gray-50">

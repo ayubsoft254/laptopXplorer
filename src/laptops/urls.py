@@ -9,6 +9,7 @@ urlpatterns = [
     path('laptop/<slug:slug>/', views.laptop_detail, name='laptop_detail'),
     path('brands/', views.brand_list, name='brand_list'),
     path('brand/<slug:slug>/', views.brand_detail, name='brand_detail'),
+    path('laptops-by-brand/<slug:slug>/', views.brand_detail, name='laptops_by_brand'),  # For sitemap
     path('compare/', views.compare_laptops, name='compare'),
     path('articles/', views.article_list, name='article_list'),
     path('article/<slug:slug>/', views.article_detail, name='article_detail'),
