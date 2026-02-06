@@ -52,20 +52,17 @@
                     
                     <!-- Navigation Links -->
                     <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
-                        <a href="{% url 'core:home' %}" class="inline-flex items-center px-1 pt-1 text-gray-900 hover:text-purple-600 border-b-2 border-transparent hover:border-purple-600 transition">
+                        <a href="{% url 'core:home' %}" class="inline-flex items-center h-16 px-1 text-gray-900 hover:text-purple-600 border-b-2 border-transparent hover:border-purple-600 transition">
                             Home
                         </a>
-                        <a href="{% url 'laptops:laptop_list' %}" class="inline-flex items-center px-1 pt-1 text-gray-900 hover:text-purple-600 border-b-2 border-transparent hover:border-purple-600 transition">
+                        <a href="{% url 'laptops:laptop_list' %}" class="inline-flex items-center h-16 px-1 text-gray-900 hover:text-purple-600 border-b-2 border-transparent hover:border-purple-600 transition">
                             Browse Laptops
                         </a>
-                        <a href="{% url 'laptops:brand_list' %}" class="inline-flex items-center px-1 pt-1 text-gray-900 hover:text-purple-600 border-b-2 border-transparent hover:border-purple-600 transition">
+                        <a href="{% url 'laptops:brand_list' %}" class="inline-flex items-center h-16 px-1 text-gray-900 hover:text-purple-600 border-b-2 border-transparent hover:border-purple-600 transition">
                             Brands
                         </a>
-                        <a href="{% url 'core:about' %}" class="inline-flex items-center px-1 pt-1 text-gray-900 hover:text-purple-600 border-b-2 border-transparent hover:border-purple-600 transition">
+                        <a href="{% url 'core:about' %}" class="inline-flex items-center h-16 px-1 text-gray-900 hover:text-purple-600 border-b-2 border-transparent hover:border-purple-600 transition">
                             About
-                        </a>
-                        <a href="{% url 'core:contact' %}" class="inline-flex items-center px-1 pt-1 text-gray-900 hover:text-purple-600 border-b-2 border-transparent hover:border-purple-600 transition">
-                            Contact
                         </a>
                     </div>
                 </div>
@@ -162,7 +159,6 @@
                 <a href="{% url 'laptops:laptop_list' %}" class="block pl-3 pr-4 py-2 text-gray-900 hover:bg-purple-50">Browse Laptops</a>
                 <a href="{% url 'laptops:brand_list' %}" class="block pl-3 pr-4 py-2 text-gray-900 hover:bg-purple-50">Brands</a>
                 <a href="{% url 'core:about' %}" class="block pl-3 pr-4 py-2 text-gray-900 hover:bg-purple-50">About</a>
-                <a href="{% url 'core:contact' %}" class="block pl-3 pr-4 py-2 text-gray-900 hover:bg-purple-50">Contact</a>
             </div>
             <div class="p-3">
                 <form action="{% url 'laptops:laptop_list' %}" method="get">
