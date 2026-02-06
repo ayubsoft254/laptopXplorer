@@ -41,7 +41,7 @@ sleep 5
 echo ""
 
 echo "Step 6: Collecting static files..."
-docker-compose exec -T web python manage.py collectstatic --noinput --clear
+docker-compose exec -T web sh -c "cd /app/src && python manage.py collectstatic --noinput --clear"
 echo ""
 
 echo "Step 7: Verifying static files on host..."
