@@ -14,7 +14,7 @@ services:
     environment:
       - DEBUG=False
       - SECRET_KEY=django-insecure-change-this-in-production
-      - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+      - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0,laptopxplorer.ayubsoft-inc.systems
       - DATABASE_URL=sqlite:///db.sqlite3
     restart: unless-stopped
 
