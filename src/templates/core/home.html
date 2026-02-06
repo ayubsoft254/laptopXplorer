@@ -369,6 +369,102 @@
 </div>
 {% endif %}
 
+<!-- Editorial Articles Section -->
+{% if featured_articles %}
+<div class="relative bg-gradient-to-b from-white to-gray-50 py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-end mb-16">
+            <div>
+                <h2 class="text-5xl font-black text-gray-900 mb-2">
+                    Expert
+                    <span class="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Articles</span>
+                </h2>
+                <p class="text-xl text-gray-600">In-depth reviews and insights from tech experts</p>
+            </div>
+            <a href="{% url 'laptops:article_list' %}" 
+               class="group flex items-center text-purple-600 hover:text-purple-700 font-bold text-lg">
+                View All
+                <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                </svg>
+            </a>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {% for article in featured_articles %}
+            <article class="group relative bg-white rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+                <!-- Featured Image -->
+                <a href="{% url 'laptops:article_detail' article.slug %}" class="block">
+                    <div class="relative overflow-hidden h-64 bg-gradient-to-br from-purple-100 to-indigo-100">
+                        {% if article.featured_image %}
+                        <img src="{{ article.featured_image.url }}" alt="{{ article.title }}" 
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        {% else %}
+                        <div class="flex items-center justify-center h-full">
+                            <i class="fas fa-newspaper text-9xl text-purple-200"></i>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Gradient Overlay -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                        
+                        <!-- Read Time Badge -->
+                        <div class="absolute top-4 right-4 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-bold text-gray-900">
+                            <i class="far fa-clock mr-1"></i> {{ article.read_time }} min
+                        </div>
+                        
+                        <!-- Laptop Badge -->
+                        <div class="absolute bottom-4 left-4 px-3 py-1 bg-purple-600 text-white rounded-lg text-xs font-bold">
+                            {{ article.laptop.brand.name }}
+                        </div>
+                    </div>
+                </a>
+                
+                <div class="p-6">
+                    <!-- Article Title -->
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-purple-600 transition-colors">
+                        <a href="{% url 'laptops:article_detail' article.slug %}">
+                            {{ article.title }}
+                        </a>
+                    </h3>
+                    
+                    <!-- Excerpt -->
+                    <p class="text-gray-600 mb-4 line-clamp-3 leading-relaxed">{{ article.excerpt }}</p>
+                    
+                    <!-- Author & Meta -->
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold">
+                                {{ article.author_name|first|upper }}
+                            </div>
+                            <div>
+                                <div class="text-sm font-semibold text-gray-900">{{ article.author_name }}</div>
+                                <div class="text-xs text-gray-500">{{ article.created_at|date:"M d, Y" }}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-3 text-sm text-gray-500">
+                            <span><i class="far fa-eye"></i> {{ article.views }}</span>
+                            {% if article.likes > 0 %}
+                            <span><i class="far fa-heart"></i> {{ article.likes }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Read More Button -->
+                    <a href="{% url 'laptops:article_detail' article.slug %}" 
+                       class="mt-4 flex items-center justify-center w-full py-3 bg-gradient-to-r from-purple-50 to-indigo-50 text-purple-600 rounded-xl font-semibold hover:from-purple-100 hover:to-indigo-100 transition-colors group">
+                        Read Article
+                        <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
 <!-- Customer Reviews Section -->
 {% if recent_reviews %}
 <div class="relative bg-gradient-to-b from-purple-50 to-white py-24 overflow-hidden">
