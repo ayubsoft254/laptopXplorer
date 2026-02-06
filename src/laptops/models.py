@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.text import slugify
+from django.urls import reverse
 
 class Brand(models.Model):
     """Laptop brand/manufacturer"""
@@ -274,6 +275,67 @@ class Laptop(models.Model):
     def gallery_images(self):
         """Get all gallery images excluding primary"""
         return self.images.filter(is_primary=False)
+    
+    def get_absolute_url(self):
+        """Return canonical URL for this laptop"""
+        return reverse('laptops:laptop_detail', args=[self.slug])
+    
+    def get_meta_description(self):
+        """Generate SEO-friendly meta description"""
+        return (
+            f"{self.brand.name} {self.name} with {self.processor.name if self.processor else 'powerful processor'}, "
+            f"{self.ram_size}GB RAM, {self.storage_size}GB {self.storage_type}, "
+            f"{self.display_size}\" {self.display_resolution} display. "
+            f"Price: ${self.price}. {self.review_count} reviews. "
+            f"{'In stock' if self.in_stock else 'Out of stock'}."
+        )
+    
+    def get_schema_org_data(self):
+        """Generate Schema.org Product structured data (JSON-LD)"""
+        return {
+            "@context": "https://schema.org/",
+            "@type": "Product",
+            "name": f"{self.brand.name} {self.name}",
+            "image": self.primary_image.url if self.primary_image else "",
+            "description": self.description or self.get_meta_description(),
+            "brand": {
+                "@type": "Brand",
+                "name": self.brand.name
+            },
+            "offers": {
+                "@type": "Offer",
+                "url": self.get_absolute_url(),
+                "priceCurrency": self.currency,
+                "price": str(self.price),
+                "availability": "https://schema.org/InStock" if self.in_stock else "https://schema.org/OutOfStock",
+                "itemCondition": "https://schema.org/NewCondition"
+            },
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": str(self.average_rating),
+                "reviewCount": str(self.review_count),
+                "bestRating": "5",
+                "worstRating": "1"
+            } if self.review_count > 0 else None,
+            "review": [
+                {
+                    "@type": "Review",
+                    "reviewRating": {
+                        "@type": "Rating",
+                        "ratingValue": str(review.rating),
+                        "bestRating": "5",
+                        "worstRating": "1"
+                    },
+                    "author": {
+                        "@type": "Person",
+                        "name": review.user_name
+                    },
+                    "reviewBody": review.comment,
+                    "datePublished": review.created_at.isoformat()
+                }
+                for review in self.reviews.all()[:5]  # Include top 5 reviews
+            ] if self.review_count > 0 else []
+        }
 
 
 class Review(models.Model):
@@ -348,6 +410,44 @@ class Article(models.Model):
     def formatted_read_time(self):
         """Return formatted read time"""
         return f"{self.read_time} min read"
+    
+    def get_absolute_url(self):
+        """Return canonical URL for this article"""
+        return reverse('laptops:article_detail', args=[self.slug])
+    
+    def get_meta_description(self):
+        """Return SEO-friendly meta description"""
+        return self.excerpt or self.content[:160]
+    
+    def get_schema_org_data(self):
+        """Generate Schema.org Article structured data (JSON-LD)"""
+        return {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": self.title,
+            "image": self.featured_image.url if self.featured_image else "",
+            "author": {
+                "@type": "Person",
+                "name": self.author_name,
+                "description": self.author_bio
+            },
+            "publisher": {
+                "@type": "Organization",
+                "name": "LaptopXplorer",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "/static/logo.png"  # Update with actual logo URL
+                }
+            },
+            "datePublished": self.created_at.isoformat(),
+            "dateModified": self.updated_at.isoformat(),
+            "description": self.excerpt,
+            "articleBody": self.content,
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": self.get_absolute_url()
+            }
+        }
 
 
 # Price Tracking Models

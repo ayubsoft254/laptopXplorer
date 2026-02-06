@@ -172,17 +172,14 @@ class LaptopImageAdmin(admin.ModelAdmin):
     list_per_page = 50
     
     fieldsets = (
-        ('Article Information', {
-            'fields': ('title', 'slug', 'laptop', 'author_name', 'author_bio')
+        ('Image Information', {
+            'fields': ('laptop', 'image', 'caption')
         }),
-        ('Content', {
-            'fields': ('featured_image', 'excerpt', 'content')
+        ('Display Settings', {
+            'fields': ('is_primary', 'order')
         }),
         ('Metadata', {
-            'fields': ('read_time', 'published', 'featured')
-        }),
-        ('Stats', {
-            'fields': ('views', 'likes', 'created_at', 'updated_at'),
+            'fields': ('uploaded_at',),
             'classes': ('collapse',)
         }),
     )
