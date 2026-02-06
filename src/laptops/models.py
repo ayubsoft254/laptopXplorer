@@ -213,3 +213,90 @@ class Laptop(models.Model):
     @property
     def storage_info(self):
         return f"{self.storage_size}GB {self.storage_type}"
+    
+    @property
+    def average_rating(self):
+        """Calculate average rating from reviews"""
+        reviews = self.reviews.all()
+        if reviews.exists():
+            return round(sum(r.rating for r in reviews) / reviews.count(), 1)
+        return 0
+    
+    @property
+    def review_count(self):
+        """Get total number of reviews"""
+        return self.reviews.count()
+
+
+class Review(models.Model):
+    """Laptop reviews and ratings"""
+    laptop = models.ForeignKey(Laptop, on_delete=models.CASCADE, related_name='reviews')
+    user_name = models.CharField(max_length=100)
+    email = models.EmailField(blank=True)
+    rating = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
+        help_text="Rating from 1 to 5 stars"
+    )
+    title = models.CharField(max_length=200)
+    comment = models.TextField()
+    pros = models.TextField(blank=True, help_text="What you liked")
+    cons = models.TextField(blank=True, help_text="What could be better")
+    helpful_count = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    verified = models.BooleanField(default=False, help_text="Verified purchase")
+    
+    class Meta:
+        ordering = ['-created_at']
+        
+    def __str__(self):
+        return f"{self.user_name} - {self.laptop.name} ({self.rating}⭐)"
+    
+    @property
+    def rating_stars(self):
+        """Return rating as stars"""
+        return '⭐' * self.rating
+
+
+class Article(models.Model):
+    """Editorial articles and in-depth reviews about laptops"""
+    laptop = models.ForeignKey(Laptop, on_delete=models.CASCADE, related_name='articles')
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=200, unique=True, blank=True)
+    author_name = models.CharField(max_length=100)
+    author_bio = models.TextField(blank=True, help_text="Short bio about the author")
+    featured_image = models.ImageField(upload_to='articles/', blank=True, null=True)
+    excerpt = models.TextField(max_length=300, help_text="Short description for previews")
+    content = models.TextField(help_text="Full article content (supports HTML)")
+    
+    # Article metadata
+    read_time = models.IntegerField(default=5, help_text="Estimated reading time in minutes")
+    views = models.IntegerField(default=0)
+    likes = models.IntegerField(default=0)
+    
+    # Publishing
+    published = models.BooleanField(default=True)
+    featured = models.BooleanField(default=False, help_text="Show on homepage")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.title)
+            slug = base_slug
+            counter = 1
+            while Article.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return self.title
+    
+    @property
+    def formatted_read_time(self):
+        """Return formatted read time"""
+        return f"{self.read_time} min read"

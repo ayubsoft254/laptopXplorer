@@ -285,8 +285,186 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Reviews Section -->
+            <div class="lg:col-span-2 mt-8">
+                <!-- Rating Overview -->
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Customer Reviews</h2>
+                    
+                    <div class="grid md:grid-cols-3 gap-8 mb-8">
+                        <!-- Overall Rating -->
+                        <div class="text-center">
+                            <div class="text-6xl font-black text-gray-900 mb-2">{{ laptop.average_rating|floatformat:1 }}</div>
+                            <div class="flex justify-center text-yellow-400 text-2xl mb-2">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= laptop.average_rating %}
+                                        <i class="fas fa-star"></i>
+                                    {% elif forloop.counter|add:"-0.5" <= laptop.average_rating %}
+                                        <i class="fas fa-star-half-alt"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="text-gray-600">{{ laptop.review_count }} review{{ laptop.review_count|pluralize }}</div>
+                        </div>
+                        
+                        <!-- Rating Distribution -->
+                        <div class="md:col-span-2">
+                            {% for rating in "54321" %}
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="text-sm text-gray-600 w-12">{{ rating }} star{{ rating|add:"0"|pluralize }}</span>
+                                <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                    {% with count=reviews|length %}
+                                    {% with star_count=reviews|dictsort:"rating"|length %}
+                                    <div class="bg-yellow-400 h-2 rounded-full" style="width: 0%"></div>
+                                    {% endwith %}
+                                    {% endwith %}
+                                </div>
+                                <span class="text-sm text-gray-600 w-8">0</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Write Review Button -->
+                    <button onclick="document.getElementById('reviewForm').scrollIntoView({behavior: 'smooth'})" 
+                            class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition font-semibold">
+                        <i class="fas fa-pen mr-2"></i> Write a Review
+                    </button>
+                </div>
+                
+                <!-- Reviews List -->
+                {% if reviews %}
+                <div class="space-y-4 mb-8">
+                    {% for review in reviews %}
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <div class="font-bold text-gray-900">{{ review.user_name }}</div>
+                                <div class="flex items-center text-yellow-400 text-sm">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= review.rating %}
+                                            <i class="fas fa-star"></i>
+                                        {% else %}
+                                            <i class="far fa-star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if review.verified %}
+                                    <span class="ml-2 text-green-600 text-xs">
+                                        <i class="fas fa-check-circle"></i> Verified
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="text-sm text-gray-500">{{ review.created_at|date:"M d, Y" }}</div>
+                        </div>
+                        
+                        <h4 class="font-semibold text-gray-900 mb-2">{{ review.title }}</h4>
+                        <p class="text-gray-700 mb-3">{{ review.comment }}</p>
+                        
+                        {% if review.pros %}
+                        <div class="mb-2">
+                            <span class="text-green-600 font-semibold text-sm"><i class="fas fa-thumbs-up mr-1"></i> Pros:</span>
+                            <p class="text-gray-600 text-sm ml-6">{{ review.pros }}</p>
+                        </div>
+                        {% endif %}
+                        
+                        {% if review.cons %}
+                        <div class="mb-3">
+                            <span class="text-red-600 font-semibold text-sm"><i class="fas fa-thumbs-down mr-1"></i> Cons:</span>
+                            <p class="text-gray-600 text-sm ml-6">{{ review.cons }}</p>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="flex items-center text-sm text-gray-500 pt-3 border-t">
+                            <button class="hover:text-purple-600 transition">
+                                <i class="far fa-thumbs-up mr-1"></i> Helpful ({{ review.helpful_count }})
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="bg-gray-50 rounded-lg p-12 text-center mb-8">
+                    <i class="fas fa-comments text-6xl text-gray-300 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">No Reviews Yet</h3>
+                    <p class="text-gray-600">Be the first to review this laptop!</p>
+                </div>
+                {% endif %}
+                
+                <!-- Write Review Form -->
+                <div id="reviewForm" class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-6">Write Your Review</h3>
+                    <form method="post" class="space-y-4">
+                        {% csrf_token %}
+                        
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Your Name *</label>
+                                <input type="text" name="user_name" required 
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email (optional)</label>
+                                <input type="email" name="email" 
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Rating *</label>
+                            <div class="flex gap-2">
+                                {% for i in "12345" %}
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="rating" value="{{ i }}" required class="sr-only peer">
+                                    <i class="far fa-star text-3xl text-gray-300 peer-checked:fas peer-checked:text-yellow-400 hover:text-yellow-300 transition"></i>
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Review Title *</label>
+                            <input type="text" name="title" required 
+                                   placeholder="Sum up your experience in one line"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Your Review *</label>
+                            <textarea name="comment" rows="5" required 
+                                      placeholder="Tell us about your experience with this laptop..."
+                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"></textarea>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Pros (optional)</label>
+                                <textarea name="pros" rows="3" 
+                                          placeholder="What did you like?"
+                                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Cons (optional)</label>
+                                <textarea name="cons" rows="3" 
+                                          placeholder="What could be better?"
+                                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"></textarea>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" 
+                                class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition font-semibold">
+                            <i class="fas fa-paper-plane mr-2"></i> Submit Review
+                        </button>
+                    </form>
+                </div>
+            </div>
 
-            <!-- Sidebar -->
+            <!-- Sidebar (continued) -->
+            <div class="lg:col-span-1">
+
             <div class="lg:col-span-1">
                 <!-- Actions -->
                 <div class="bg-white rounded-lg shadow-md p-6 mb-6 sticky top-20">

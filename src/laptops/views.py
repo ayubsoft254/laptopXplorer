@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
 from django.core.paginator import Paginator
-from .models import Laptop, Brand, Category, Processor
+from .models import Laptop, Brand, Category, Processor, Article
 
 
 def laptop_list(request):
@@ -87,12 +87,41 @@ def laptop_detail(request, slug):
         Q(brand=laptop.brand) | Q(category=laptop.category)
     ).exclude(id=laptop.id).select_related('brand', 'category')[:4]
     
+    # Get reviews
+    reviews = laptop.reviews.all()
+    
+    # Handle review submission
+    if request.method == 'POST':
+        from .models import Review
+        user_name = request.POST.get('user_name')
+        rating = request.POST.get('rating')
+        title = request.POST.get('title')
+        comment = request.POST.get('comment')
+        pros = request.POST.get('pros', '')
+        cons = request.POST.get('cons', '')
+        email = request.POST.get('email', '')
+        
+        if user_name and rating and title and comment:
+            Review.objects.create(
+                laptop=laptop,
+                user_name=user_name,
+                email=email,
+                rating=int(rating),
+                title=title,
+                comment=comment,
+                pros=pros,
+                cons=cons
+            )
+            return redirect('laptops:laptop_detail', slug=slug)
+    
     context = {
         'laptop': laptop,
         'similar_laptops': similar_laptops,
+        'reviews': reviews,
     }
     
     return render(request, 'laptops/laptop_detail.html', context)
+
 
 
 def brand_list(request):

@@ -221,6 +221,122 @@
 </div>
 {% endif %}
 
+<!-- Latest/New Laptops Section -->
+{% if latest_laptops %}
+<div class="relative bg-black text-white py-24 overflow-hidden">
+    <!-- Animated Background -->
+    <div class="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-black opacity-90"></div>
+    <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
+    
+    <!-- Glowing Orbs -->
+    <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600 rounded-full filter blur-3xl opacity-20 animate-pulse"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600 rounded-full filter blur-3xl opacity-20 animate-pulse" style="animation-delay: 1s;"></div>
+    
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <div class="inline-flex items-center px-4 py-2 rounded-full bg-purple-500/20 backdrop-blur-md border border-purple-400/30 text-purple-300 text-sm font-medium mb-6">
+                <span class="relative flex h-2 w-2 mr-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+                </span>
+                Just Arrived
+            </div>
+            
+            <h2 class="text-5xl font-black mb-4">
+                Latest
+                <span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Releases</span>
+            </h2>
+            <p class="text-xl text-gray-300 max-w-2xl mx-auto">
+                Discover the newest laptops hitting the market
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {% for laptop in latest_laptops %}
+            <div class="group relative bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden border border-white/10 hover:border-purple-400/50 transition-all duration-500 hover:-translate-y-2 hover:bg-white/10">
+                <!-- New Badge -->
+                <div class="absolute top-4 left-4 z-10 px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-bold rounded-full animate-pulse">
+                    NEW
+                </div>
+                
+                <a href="{% url 'laptops:laptop_detail' laptop.slug %}" class="block">
+                    <div class="relative overflow-hidden h-48 bg-gradient-to-br from-gray-900 to-black">
+                        {% if laptop.image %}
+                        <img src="{{ laptop.image.url }}" alt="{{ laptop.name }}" 
+                             class="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform duration-500">
+                        {% else %}
+                        <div class="flex items-center justify-center h-full">
+                            <i class="fas fa-laptop text-7xl text-purple-400/30 group-hover:text-purple-400/50 transition-colors"></i>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Gradient Overlay on Hover -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-purple-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                </a>
+                
+                <div class="p-5">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="px-2 py-1 bg-purple-500/20 text-purple-300 text-xs font-bold rounded-lg border border-purple-400/30">
+                            {{ laptop.brand.name }}
+                        </span>
+                        <span class="text-xs text-gray-400">{{ laptop.category.name }}</span>
+                    </div>
+                    
+                    <h3 class="text-base font-bold text-white mb-3 line-clamp-2 min-h-[3rem] group-hover:text-purple-300 transition-colors">
+                        <a href="{% url 'laptops:laptop_detail' laptop.slug %}">
+                            {{ laptop.name }}
+                        </a>
+                    </h3>
+                    
+                    <div class="space-y-2 mb-4 text-sm text-gray-400">
+                        <div class="flex items-center">
+                            <i class="fas fa-microchip w-5 text-purple-400"></i>
+                            <span class="ml-2 truncate">{{ laptop.processor.name|truncatewords:3|default:"N/A" }}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-memory w-5 text-purple-400"></i>
+                            <span class="ml-2">{{ laptop.ram_size }}GB • {{ laptop.storage_size }}GB SSD</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center pt-4 border-t border-white/10">
+                        <div>
+                            <div class="text-xs text-gray-500">Starting at</div>
+                            <div class="text-xl font-black text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text">
+                                ${{ laptop.price }}
+                            </div>
+                        </div>
+                        <a href="{% url 'laptops:laptop_detail' laptop.slug %}" 
+                           class="w-10 h-10 flex items-center justify-center bg-purple-600 text-white rounded-full hover:bg-purple-500 transition-all group-hover:scale-110 duration-300 shadow-lg shadow-purple-500/50">
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <!-- Date Added -->
+                    <div class="mt-3 text-xs text-gray-500 flex items-center">
+                        <i class="far fa-clock mr-1"></i>
+                        Added {{ laptop.created_at|timesince }} ago
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- View All Button -->
+        <div class="text-center mt-12">
+            <a href="{% url 'laptops:laptop_list' %}?sort=-created_at" 
+               class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-2xl font-bold text-lg hover:scale-105 transition-transform duration-300 shadow-2xl shadow-purple-500/30">
+                View All New Arrivals
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 <!-- Brands Section -->
 {% if brands %}
 <div class="bg-white py-24">
@@ -248,6 +364,105 @@
                 </div>
             </a>
             {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Customer Reviews Section -->
+{% if recent_reviews %}
+<div class="relative bg-gradient-to-b from-purple-50 to-white py-24 overflow-hidden">
+    <!-- Decorative Elements -->
+    <div class="absolute top-0 left-0 w-96 h-96 bg-purple-200 rounded-full filter blur-3xl opacity-20 -translate-y-1/2 -translate-x-1/2"></div>
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-indigo-200 rounded-full filter blur-3xl opacity-20 translate-y-1/2 translate-x-1/2"></div>
+    
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-5xl font-black text-gray-900 mb-4">
+                What People Are
+                <span class="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Saying</span>
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Real reviews from real users helping you make informed decisions
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for review in recent_reviews %}
+            <div class="group relative bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100 hover:border-purple-200">
+                <!-- Quote Icon -->
+                <div class="absolute -top-4 -left-4 w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center shadow-lg">
+                    <i class="fas fa-quote-left text-white text-xl"></i>
+                </div>
+                
+                <!-- Rating Stars -->
+                <div class="flex items-center justify-between mb-4 mt-2">
+                    <div class="flex text-yellow-400 text-lg">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= review.rating %}
+                                <i class="fas fa-star"></i>
+                            {% else %}
+                                <i class="far fa-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% if review.verified %}
+                    <span class="px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
+                        <i class="fas fa-check-circle"></i> Verified
+                    </span>
+                    {% endif %}
+                </div>
+                
+                <!-- Review Title -->
+                <h4 class="font-bold text-gray-900 mb-2 text-lg line-clamp-1">{{ review.title }}</h4>
+                
+                <!-- Review Comment -->
+                <p class="text-gray-600 mb-4 line-clamp-3 leading-relaxed">{{ review.comment }}</p>
+                
+                <!-- Laptop Info -->
+                <a href="{% url 'laptops:laptop_detail' review.laptop.slug %}" 
+                   class="flex items-center gap-3 p-3 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl mb-4 hover:from-purple-100 hover:to-indigo-100 transition-colors">
+                    <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                        <i class="fas fa-laptop text-purple-600 text-xl"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-xs text-purple-600 font-semibold">{{ review.laptop.brand.name }}</div>
+                        <div class="text-sm font-medium text-gray-900 truncate">{{ review.laptop.name }}</div>
+                    </div>
+                    <i class="fas fa-arrow-right text-purple-400 group-hover:translate-x-1 transition-transform"></i>
+                </a>
+                
+                <!-- Reviewer Info -->
+                <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            {{ review.user_name|first|upper }}
+                        </div>
+                        <div>
+                            <div class="text-sm font-semibold text-gray-900">{{ review.user_name }}</div>
+                            <div class="text-xs text-gray-500">{{ review.created_at|timesince }} ago</div>
+                        </div>
+                    </div>
+                    
+                    {% if review.helpful_count > 0 %}
+                    <div class="text-xs text-gray-500">
+                        <i class="far fa-thumbs-up text-purple-500"></i> {{ review.helpful_count }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- View All Reviews Button -->
+        <div class="text-center mt-12">
+            <a href="{% url 'laptops:laptop_list' %}" 
+               class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-2xl font-bold text-lg hover:scale-105 transition-transform duration-300 shadow-xl shadow-purple-500/30">
+                Explore All Laptops & Reviews
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                </svg>
+            </a>
         </div>
     </div>
 </div>
