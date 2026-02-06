@@ -182,10 +182,17 @@
                                 <div class="text-2xl font-bold text-purple-600">
                                     ${{ laptop.price }}
                                 </div>
-                                <a href="{% url 'laptops:laptop_detail' laptop.slug %}" 
-                                   class="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition text-sm">
-                                    Details
-                                </a>
+                                <div class="flex gap-2">
+                                    <button onclick="toggleCompare({{ laptop.id }}, '{{ laptop.brand.name }} {{ laptop.name|escapejs }}')" 
+                                            class="compare-btn text-purple-600 hover:bg-purple-50 border border-purple-600 px-3 py-2 rounded-md transition text-sm"
+                                            data-laptop-id="{{ laptop.id }}">
+                                        <i class="fas fa-balance-scale"></i>
+                                    </button>
+                                    <a href="{% url 'laptops:laptop_detail' laptop.slug %}" 
+                                       class="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition text-sm">
+                                        Details
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -232,4 +239,125 @@
         </div>
     </div>
 </div>
+
+<!-- Floating Comparison Bar -->
+<div id="compareBar" class="hidden fixed bottom-0 left-0 right-0 bg-purple-600 text-white shadow-lg z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="font-semibold">
+                    <i class="fas fa-balance-scale mr-2"></i>
+                    Compare Laptops (<span id="compareCount">0</span>)
+                </div>
+                <div id="compareList" class="flex gap-2 flex-wrap"></div>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="compareSelected()" 
+                        id="compareButton"
+                        class="bg-white text-purple-600 px-6 py-2 rounded-md hover:bg-gray-100 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled>
+                    Compare Now
+                </button>
+                <button onclick="clearCompare()" 
+                        class="bg-purple-700 text-white px-4 py-2 rounded-md hover:bg-purple-800 transition">
+                    Clear All
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let compareItems = JSON.parse(localStorage.getItem('compareItems') || '[]');
+
+function toggleCompare(laptopId, laptopName) {
+    const index = compareItems.findIndex(item => item.id === laptopId);
+    
+    if (index > -1) {
+        // Remove from comparison
+        compareItems.splice(index, 1);
+        localStorage.setItem('compareItems', JSON.stringify(compareItems));
+        updateCompareUI();
+    } else {
+        // Add to comparison (max 4 items)
+        if (compareItems.length >= 4) {
+            alert('You can compare up to 4 laptops at a time');
+            return;
+        }
+        compareItems.push({ id: laptopId, name: laptopName });
+        localStorage.setItem('compareItems', JSON.stringify(compareItems));
+        updateCompareUI();
+    }
+}
+
+function updateCompareUI() {
+    const compareBar = document.getElementById('compareBar');
+    const compareCount = document.getElementById('compareCount');
+    const compareList = document.getElementById('compareList');
+    const compareButton = document.getElementById('compareButton');
+    
+    // Update count
+    compareCount.textContent = compareItems.length;
+    
+    // Show/hide bar
+    if (compareItems.length > 0) {
+        compareBar.classList.remove('hidden');
+    } else {
+        compareBar.classList.add('hidden');
+    }
+    
+    // Enable/disable compare button
+    compareButton.disabled = compareItems.length < 2;
+    
+    // Update list
+    compareList.innerHTML = compareItems.map(item => `
+        <span class="bg-purple-700 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+            ${item.name.substring(0, 30)}${item.name.length > 30 ? '...' : ''}
+            <button onclick="removeFromCompare(${item.id})" class="hover:text-red-300">
+                <i class="fas fa-times"></i>
+            </button>
+        </span>
+    `).join('');
+    
+    // Update button states
+    document.querySelectorAll('.compare-btn').forEach(btn => {
+        const laptopId = parseInt(btn.dataset.laptopId);
+        if (compareItems.some(item => item.id === laptopId)) {
+            btn.classList.add('bg-purple-600', 'text-white');
+            btn.classList.remove('text-purple-600', 'hover:bg-purple-50', 'border', 'border-purple-600');
+            btn.innerHTML = '<i class="fas fa-check"></i>';
+        } else {
+            btn.classList.remove('bg-purple-600', 'text-white');
+            btn.classList.add('text-purple-600', 'hover:bg-purple-50', 'border', 'border-purple-600');
+            btn.innerHTML = '<i class="fas fa-balance-scale"></i>';
+        }
+    });
+}
+
+function removeFromCompare(laptopId) {
+    compareItems = compareItems.filter(item => item.id !== laptopId);
+    localStorage.setItem('compareItems', JSON.stringify(compareItems));
+    updateCompareUI();
+}
+
+function compareSelected() {
+    if (compareItems.length < 2) {
+        alert('Please select at least 2 laptops to compare');
+        return;
+    }
+    const ids = compareItems.map(item => item.id).join(',');
+    window.location.href = `{% url 'laptops:compare' %}?ids=${ids}`;
+}
+
+function clearCompare() {
+    compareItems = [];
+    localStorage.setItem('compareItems', JSON.stringify(compareItems));
+    updateCompareUI();
+}
+
+// Initialize UI on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateCompareUI();
+});
+</script>
 {% endblock %}

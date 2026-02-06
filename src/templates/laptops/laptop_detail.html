@@ -300,10 +300,11 @@
                 <!-- Actions -->
                 <div class="bg-white rounded-lg shadow-md p-6 mb-6 sticky top-20">
                     <h3 class="text-lg font-bold text-gray-900 mb-4">Actions</h3>
-                    <a href="{% url 'laptops:compare' %}?ids={{ laptop.id }}" 
-                       class="block w-full bg-purple-600 text-white text-center py-3 rounded-lg hover:bg-purple-700 transition mb-3">
+                    <button onclick="toggleCompare({{ laptop.id }}, '{{ laptop.brand.name }} {{ laptop.name|escapejs }}')" 
+                            class="compare-btn block w-full bg-purple-600 text-white text-center py-3 rounded-lg hover:bg-purple-700 transition mb-3"
+                            data-laptop-id="{{ laptop.id }}">
                         <i class="fas fa-balance-scale mr-2"></i> Add to Compare
-                    </a>
+                    </button>
                     <div class="text-sm text-gray-600 text-center">
                         <i class="fas fa-eye mr-1"></i> {{ laptop.views }} views
                     </div>
@@ -339,4 +340,151 @@
         </div>
     </div>
 </div>
+
+<!-- Floating Comparison Bar -->
+<div id="compareBar" class="hidden fixed bottom-0 left-0 right-0 bg-purple-600 text-white shadow-lg z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="font-semibold">
+                    <i class="fas fa-balance-scale mr-2"></i>
+                    Compare Laptops (<span id="compareCount">0</span>)
+                </div>
+                <div id="compareList" class="flex gap-2 flex-wrap"></div>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="compareSelected()" 
+                        id="compareButton"
+                        class="bg-white text-purple-600 px-6 py-2 rounded-md hover:bg-gray-100 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled>
+                    Compare Now
+                </button>
+                <button onclick="clearCompare()" 
+                        class="bg-purple-700 text-white px-4 py-2 rounded-md hover:bg-purple-800 transition">
+                    Clear All
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let compareItems = JSON.parse(localStorage.getItem('compareItems') || '[]');
+
+// Add current laptop to compare on page load if not already added
+document.addEventListener('DOMContentLoaded', function() {
+    const currentLaptopId = {{ laptop.id }};
+    const currentLaptopName = '{{ laptop.brand.name }} {{ laptop.name|escapejs }}';
+    
+    // Check if current laptop is in compare list
+    const isInCompare = compareItems.some(item => item.id === currentLaptopId);
+    if (isInCompare) {
+        const btn = document.querySelector('.compare-btn');
+        btn.classList.remove('bg-purple-600', 'hover:bg-purple-700');
+        btn.classList.add('bg-green-600', 'hover:bg-green-700');
+        btn.innerHTML = '<i class="fas fa-check mr-2"></i> Added to Compare';
+    }
+    
+    updateCompareUI();
+});
+
+function toggleCompare(laptopId, laptopName) {
+    const index = compareItems.findIndex(item => item.id === laptopId);
+    
+    if (index > -1) {
+        // Remove from comparison
+        compareItems.splice(index, 1);
+        localStorage.setItem('compareItems', JSON.stringify(compareItems));
+        
+        const btn = document.querySelector('.compare-btn');
+        btn.classList.remove('bg-green-600', 'hover:bg-green-700');
+        btn.classList.add('bg-purple-600', 'hover:bg-purple-700');
+        btn.innerHTML = '<i class="fas fa-balance-scale mr-2"></i> Add to Compare';
+        
+        updateCompareUI();
+    } else {
+        // Add to comparison (max 4 items)
+        if (compareItems.length >= 4) {
+            alert('You can compare up to 4 laptops at a time');
+            return;
+        }
+        compareItems.push({ id: laptopId, name: laptopName });
+        localStorage.setItem('compareItems', JSON.stringify(compareItems));
+        
+        const btn = document.querySelector('.compare-btn');
+        btn.classList.remove('bg-purple-600', 'hover:bg-purple-700');
+        btn.classList.add('bg-green-600', 'hover:bg-green-700');
+        btn.innerHTML = '<i class="fas fa-check mr-2"></i> Added to Compare';
+        
+        updateCompareUI();
+    }
+}
+
+function updateCompareUI() {
+    const compareBar = document.getElementById('compareBar');
+    const compareCount = document.getElementById('compareCount');
+    const compareList = document.getElementById('compareList');
+    const compareButton = document.getElementById('compareButton');
+    
+    // Update count
+    compareCount.textContent = compareItems.length;
+    
+    // Show/hide bar
+    if (compareItems.length > 0) {
+        compareBar.classList.remove('hidden');
+    } else {
+        compareBar.classList.add('hidden');
+    }
+    
+    // Enable/disable compare button
+    compareButton.disabled = compareItems.length < 2;
+    
+    // Update list
+    compareList.innerHTML = compareItems.map(item => `
+        <span class="bg-purple-700 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+            ${item.name.substring(0, 30)}${item.name.length > 30 ? '...' : ''}
+            <button onclick="removeFromCompare(${item.id})" class="hover:text-red-300">
+                <i class="fas fa-times"></i>
+            </button>
+        </span>
+    `).join('');
+}
+
+function removeFromCompare(laptopId) {
+    compareItems = compareItems.filter(item => item.id !== laptopId);
+    localStorage.setItem('compareItems', JSON.stringify(compareItems));
+    
+    // Update button if it's the current laptop
+    const currentLaptopId = {{ laptop.id }};
+    if (laptopId === currentLaptopId) {
+        const btn = document.querySelector('.compare-btn');
+        btn.classList.remove('bg-green-600', 'hover:bg-green-700');
+        btn.classList.add('bg-purple-600', 'hover:bg-purple-700');
+        btn.innerHTML = '<i class="fas fa-balance-scale mr-2"></i> Add to Compare';
+    }
+    
+    updateCompareUI();
+}
+
+function compareSelected() {
+    if (compareItems.length < 2) {
+        alert('Please select at least 2 laptops to compare');
+        return;
+    }
+    const ids = compareItems.map(item => item.id).join(',');
+    window.location.href = `{% url 'laptops:compare' %}?ids=${ids}`;
+}
+
+function clearCompare() {
+    compareItems = [];
+    localStorage.setItem('compareItems', JSON.stringify(compareItems));
+    
+    const btn = document.querySelector('.compare-btn');
+    btn.classList.remove('bg-green-600', 'hover:bg-green-700');
+    btn.classList.add('bg-purple-600', 'hover:bg-purple-700');
+    btn.innerHTML = '<i class="fas fa-balance-scale mr-2"></i> Add to Compare';
+    
+    updateCompareUI();
+}
+</script>
 {% endblock %}
