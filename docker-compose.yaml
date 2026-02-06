@@ -7,8 +7,8 @@ services:
     command: gunicorn --bind 0.0.0.0:1480 --workers 3 config.wsgi:application
     volumes:
       - ./src:/app/src
-      - static_volume:/app/staticfiles
-      - media_volume:/app/mediafiles
+      - ./staticfiles:/app/staticfiles
+      - ./mediafiles:/app/mediafiles
     ports:
       - "1480:1480"
     environment:
@@ -18,8 +18,4 @@ services:
       - CSRF_TRUSTED_ORIGINS=http://localhost:1480,https://laptopxplorer.ayubsoft-inc.systems
       - DATABASE_URL=sqlite:///db.sqlite3
     restart: unless-stopped
-
-volumes:
-  static_volume:
-  media_volume:
 
