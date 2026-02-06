@@ -98,3 +98,4 @@ GitHub.sublime-settings
 .vscode/
 .history
 .dist
+src/staticfiles
