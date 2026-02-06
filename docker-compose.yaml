@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: laptopxplorer_web
+    command: gunicorn --bind 0.0.0.0:1480 --workers 3 config.wsgi:application
+    volumes:
+      - ./src:/app/src
+      - static_volume:/app/staticfiles
+      - media_volume:/app/mediafiles
+    ports:
+      - "1480:1480"
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=django-insecure-change-this-in-production
+      - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+      - DATABASE_URL=sqlite:///db.sqlite3
+    restart: unless-stopped
+
+volumes:
+  static_volume:
+  media_volume:
+
