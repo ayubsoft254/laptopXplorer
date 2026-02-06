@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+
+{% block title %}My Favorites - LaptopXplorer{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Page Header -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+            <div>
+                <h1 class="text-4xl font-bold text-gray-900">
+                    <i class="fas fa-heart text-red-500 mr-2"></i>My Favorite Laptops
+                </h1>
+                <p class="text-gray-600 mt-2">
+                    {% if favorites %}
+                        {{ favorites|length }} laptop{{ favorites|pluralize }} saved
+                    {% else %}
+                        No favorites yet
+                    {% endif %}
+                </p>
+            </div>
+            
+            <a href="{% url 'laptops:laptop_list' %}" 
+               class="mt-4 md:mt-0 inline-flex items-center px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                <i class="fas fa-plus mr-2"></i>Explore More Laptops
+            </a>
+        </div>
+
+        {% if favorites %}
+            <!-- Favorites Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for laptop in favorites %}
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition group">
+                        <!-- Laptop Image -->
+                        <div class="relative h-48 bg-gray-200 overflow-hidden">
+                            {% if laptop.image %}
+                                <img src="{{ laptop.image.url }}" alt="{{ laptop.name }}" 
+                                     class="w-full h-full object-cover group-hover:scale-105 transition">
+                            {% else %}
+                                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-200 to-gray-300">
+                                    <i class="fas fa-laptop text-4xl text-gray-400"></i>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Favorite Badge -->
+                            <button class="absolute top-3 right-3 w-10 h-10 bg-white text-red-500 rounded-full flex items-center justify-center hover:bg-gray-100 transition"
+                                    onclick="toggleFavorite({{ laptop.id }}, this)">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+
+                        <!-- Laptop Details -->
+                        <div class="p-5">
+                            <!-- Brand and Category -->
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-purple-600 bg-purple-50 px-3 py-1 rounded-full">
+                                    {{ laptop.brand.name }}
+                                </span>
+                                <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                                    {{ laptop.category.name }}
+                                </span>
+                            </div>
+
+                            <!-- Name -->
+                            <h3 class="text-lg font-bold text-gray-900 mb-2 line-clamp-2">
+                                {{ laptop.name }}
+                            </h3>
+
+                            <!-- Specs -->
+                            <div class="space-y-1 mb-4 text-sm text-gray-600">
+                                {% if laptop.processor %}
+                                    <p><i class="fas fa-microchip text-purple-600 w-4"></i> {{ laptop.processor.name }}</p>
+                                {% endif %}
+                                {% if laptop.ram_size %}
+                                    <p><i class="fas fa-memory text-purple-600 w-4"></i> {{ laptop.ram_size }} GB RAM</p>
+                                {% endif %}
+                                {% if laptop.storage_size %}
+                                    <p><i class="fas fa-hdd text-purple-600 w-4"></i> {{ laptop.storage_size }} GB Storage</p>
+                                {% endif %}
+                                {% if laptop.display_size %}
+                                    <p><i class="fas fa-desktop text-purple-600 w-4"></i> {{ laptop.display_size }}" Display</p>
+                                {% endif %}
+                            </div>
+
+                            <!-- Price and Actions -->
+                            <div class="border-t pt-4">
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="text-2xl font-bold text-purple-600">${{ laptop.price|floatformat:2 }}</span>
+                                    {% if laptop.reviews.count > 0 %}
+                                        <div class="flex items-center gap-1">
+                                            {% for i in "12345" %}
+                                                <i class="fas fa-star text-xs {% if forloop.counter <= laptop.reviews.all|dictsort:"rating"|last %}text-yellow-500{% else %}text-gray-300{% endif %}"></i>
+                                            {% endfor %}
+                                            <span class="text-sm text-gray-600">{{ laptop.reviews.count }}</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <a href="{% url 'laptops:laptop_detail' laptop.id %}" 
+                                   class="block w-full text-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-medium">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- Empty State -->
+            <div class="bg-white rounded-xl shadow-lg p-12 text-center">
+                <i class="fas fa-heart text-6xl text-gray-300 mb-4"></i>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">No Favorites Yet</h2>
+                <p class="text-gray-600 mb-6">Start adding laptops to your favorites to compare and keep track of your top choices.</p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="{% url 'laptops:laptop_list' %}" 
+                       class="inline-flex items-center justify-center px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                        <i class="fas fa-search mr-2"></i>Browse Laptops
+                    </a>
+                    <a href="{% url 'accounts:dashboard' %}" 
+                       class="inline-flex items-center justify-center px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                        <i class="fas fa-chart-line mr-2"></i>Go to Dashboard
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function toggleFavorite(laptopId, button) {
+    fetch(`/accounts/favorite/${laptopId}/toggle/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || '',
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.favorited) {
+            // Remove the card from favorites list
+            button.closest('.bg-white').remove();
+            if (document.querySelectorAll('.bg-white').length === 0) {
+                location.reload();
+            }
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+</script>
+{% endblock %}
