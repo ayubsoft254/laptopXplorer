@@ -9,7 +9,7 @@ from laptops.models import Laptop, Review
 @login_required
 def profile(request):
     """User profile page"""
-    user_profile = request.user.profile
+    user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
     favorites = user_profile.favorites.all()[:6]  # Show 6 recent favorites
     reviews = Review.objects.filter(email=request.user.email).order_by('-created_at')[:5]
     
@@ -25,7 +25,7 @@ def profile(request):
 @login_required
 def edit_profile(request):
     """Edit user profile"""
-    user_profile = request.user.profile
+    user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
     
     if request.method == 'POST':
         # Update user fields
@@ -58,7 +58,7 @@ def edit_profile(request):
 @login_required
 def dashboard(request):
     """User dashboard with overview"""
-    user_profile = request.user.profile
+    user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
     favorites = user_profile.favorites.all()
     reviews = Review.objects.filter(email=request.user.email).order_by('-created_at')
     
@@ -82,7 +82,7 @@ def dashboard(request):
 @login_required
 def favorites(request):
     """User's favorite laptops"""
-    user_profile = request.user.profile
+    user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
     favorites = user_profile.favorites.select_related('brand', 'category', 'processor').all()
     
     context = {
@@ -96,7 +96,7 @@ def favorites(request):
 def toggle_favorite(request, laptop_id):
     """Add/remove laptop from favorites"""
     laptop = get_object_or_404(Laptop, id=laptop_id)
-    user_profile = request.user.profile
+    user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
     
     if laptop in user_profile.favorites.all():
         user_profile.favorites.remove(laptop)
