@@ -135,12 +135,12 @@ def compare_laptops(request):
     laptop_ids = request.GET.getlist('ids')
     
     if not laptop_ids:
-        return redirect('laptop_list')
+        return redirect('laptops:laptop_list')
     
     laptops = Laptop.objects.filter(id__in=laptop_ids).select_related('brand', 'category', 'processor')
     
     if laptops.count() < 2:
-        return redirect('laptop_list')
+        return redirect('laptops:laptop_list')
     
     context = {
         'laptops': laptops,
