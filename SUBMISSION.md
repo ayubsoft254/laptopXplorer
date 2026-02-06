@@ -27,19 +27,26 @@ This project represents a complete journey from concept to production deployment
 ### 🌐 Live Site
 **Production URL**: https://laptopxplorer.ayubsoft-inc.systems
 
+**Admin Panel Access**:
+- URL: https://laptopxplorer.ayubsoft-inc.systems/admin
+- Username: `admin`
+- Password: `admin123`
+
+> **Note**: Demo credentials provided for challenge evaluation. Change immediately in production environments.
+
 ### 📸 Screenshots
 
 **Homepage - Futuristic Design**
 ![Homepage with gradient hero section and featured laptops](https://drive.google.com/uc?export=view&id=1wODgNBIKH8nWuPpBk7_hHBDAXoUGl7Oa)
 
 **Laptop Detail - Multi-Image Gallery**
-![Laptop detail page showing multiple product images and specifications](your-laptop-detail-screenshot)
+[View Screenshot](https://imgur.com/a/sMdJZ4x)
 
 **Article System**
-![Tech articles and buying guides section](your-article-screenshot)
+[View Screenshot](https://imgur.com/a/f2ufqr3)
 
 **Admin Panel**
-![Django admin interface for content management](your-admin-screenshot)
+[View Screenshot](https://imgur.com/a/gjXTMie)
 
 ### 🎥 Video Walkthrough
 [Link to video demo or GIF walkthrough]
