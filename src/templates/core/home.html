@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block title %}LaptopXplorer - Find Your Perfect Laptop{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="gradient-bg text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div class="text-center">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6">
+                Find Your Perfect Laptop
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 text-purple-100">
+                Compare specs, read reviews, and make informed decisions
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'laptops:laptop_list' %}" class="bg-white text-purple-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+                    Browse Laptops
+                </a>
+                <a href="{% url 'laptops:compare' %}" class="bg-purple-700 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-800 transition">
+                    Compare Now
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Categories Section -->
+{% if categories %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Browse by Category</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        {% for category in categories %}
+        <a href="{% url 'laptops:laptop_list' %}?category={{ category.id }}" 
+           class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition text-center hover-scale">
+            <div class="text-4xl mb-3">
+                {% if category.icon %}
+                    <i class="{{ category.icon }}"></i>
+                {% else %}
+                    <i class="fas fa-laptop"></i>
+                {% endif %}
+            </div>
+            <h3 class="font-semibold text-lg text-gray-900">{{ category.name }}</h3>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Featured Laptops -->
+{% if featured_laptops %}
+<div class="bg-gray-100 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-bold text-gray-900">Featured Laptops</h2>
+            <a href="{% url 'laptops:laptop_list' %}" class="text-purple-600 hover:text-purple-700 font-semibold">
+                View All <i class="fas fa-arrow-right ml-1"></i>
+            </a>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for laptop in featured_laptops %}
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition hover-scale">
+                <a href="{% url 'laptops:laptop_detail' laptop.slug %}">
+                    {% if laptop.image %}
+                    <img src="{{ laptop.image.url }}" alt="{{ laptop.name }}" class="w-full h-48 object-cover">
+                    {% else %}
+                    <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                        <i class="fas fa-laptop text-6xl text-gray-400"></i>
+                    </div>
+                    {% endif %}
+                </a>
+                
+                <div class="p-6">
+                    <div class="text-sm text-purple-600 font-semibold mb-2">{{ laptop.brand.name }}</div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">
+                        <a href="{% url 'laptops:laptop_detail' laptop.slug %}" class="hover:text-purple-600">
+                            {{ laptop.name }}
+                        </a>
+                    </h3>
+                    
+                    <div class="space-y-1 text-sm text-gray-600 mb-4">
+                        <div><i class="fas fa-microchip w-4"></i> {{ laptop.processor.name|default:"N/A" }}</div>
+                        <div><i class="fas fa-memory w-4"></i> {{ laptop.ram_info }}</div>
+                        <div><i class="fas fa-hdd w-4"></i> {{ laptop.storage_info }}</div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <div class="text-2xl font-bold text-purple-600">
+                            ${{ laptop.price }}
+                        </div>
+                        <a href="{% url 'laptops:laptop_detail' laptop.slug %}" 
+                           class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition text-sm">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Brands Section -->
+{% if brands %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Popular Brands</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-6">
+        {% for brand in brands %}
+        <a href="{% url 'laptops:brand_detail' brand.slug %}" 
+           class="bg-white p-4 rounded-lg shadow-md hover:shadow-xl transition flex items-center justify-center hover-scale">
+            {% if brand.logo %}
+            <img src="{{ brand.logo.url }}" alt="{{ brand.name }}" class="h-12 object-contain">
+            {% else %}
+            <span class="font-semibold text-gray-700">{{ brand.name }}</span>
+            {% endif %}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Features Section -->
+<div class="bg-gray-900 text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold mb-12 text-center">Why Choose LaptopXplorer?</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="text-center">
+                <div class="text-5xl mb-4 text-purple-400">
+                    <i class="fas fa-database"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Comprehensive Database</h3>
+                <p class="text-gray-400">Detailed specifications for laptops across all major brands</p>
+            </div>
+            
+            <div class="text-center">
+                <div class="text-5xl mb-4 text-purple-400">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Advanced Search</h3>
+                <p class="text-gray-400">Filter by brand, price, specs, and more to find exactly what you need</p>
+            </div>
+            
+            <div class="text-center">
+                <div class="text-5xl mb-4 text-purple-400">
+                    <i class="fas fa-balance-scale"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Easy Comparison</h3>
+                <p class="text-gray-400">Compare multiple laptops side-by-side to make the best choice</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}LaptopXplorer - Find Your Perfect Laptop{% endblock %}</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+        
+        .hover-scale:hover {
+            transform: scale(1.05);
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="h-full flex flex-col bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <!-- Logo -->
+                    <div class="flex-shrink-0 flex items-center">
+                        <a href="{% url 'core:home' %}" class="text-2xl font-bold gradient-bg bg-clip-text text-transparent">
+                            <i class="fas fa-laptop mr-2"></i>LaptopXplorer
+                        </a>
+                    </div>
+                    
+                    <!-- Navigation Links -->
+                    <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
+                        <a href="{% url 'core:home' %}" class="inline-flex items-center px-1 pt-1 text-gray-900 hover:text-purple-600 border-b-2 border-transparent hover:border-purple-600 transition">
+                            Home
+                        </a>
+                        <a href="{% url 'laptops:laptop_list' %}" class="inline-flex items-center px-1 pt-1 text-gray-900 hover:text-purple-600 border-b-2 border-transparent hover:border-purple-600 transition">
+                            Browse Laptops
+                        </a>
+                        <a href="{% url 'laptops:brand_list' %}" class="inline-flex items-center px-1 pt-1 text-gray-900 hover:text-purple-600 border-b-2 border-transparent hover:border-purple-600 transition">
+                            Brands
+                        </a>
+                        <a href="{% url 'core:about' %}" class="inline-flex items-center px-1 pt-1 text-gray-900 hover:text-purple-600 border-b-2 border-transparent hover:border-purple-600 transition">
+                            About
+                        </a>
+                        <a href="{% url 'core:contact' %}" class="inline-flex items-center px-1 pt-1 text-gray-900 hover:text-purple-600 border-b-2 border-transparent hover:border-purple-600 transition">
+                            Contact
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Search Bar -->
+                <div class="hidden sm:ml-6 sm:flex sm:items-center flex-1 max-w-md mx-4">
+                    <form action="{% url 'laptops:laptop_list' %}" method="get" class="w-full">
+                        <div class="relative">
+                            <input type="text" name="q" placeholder="Search laptops..." 
+                                   class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent">
+                            <button type="submit" class="absolute right-2 top-2 text-gray-400 hover:text-purple-600">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <div class="flex items-center sm:hidden">
+                    <button id="mobile-menu-btn" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden sm:hidden">
+            <div class="pt-2 pb-3 space-y-1">
+                <a href="{% url 'core:home' %}" class="block pl-3 pr-4 py-2 text-gray-900 hover:bg-purple-50">Home</a>
+                <a href="{% url 'laptops:laptop_list' %}" class="block pl-3 pr-4 py-2 text-gray-900 hover:bg-purple-50">Browse Laptops</a>
+                <a href="{% url 'laptops:brand_list' %}" class="block pl-3 pr-4 py-2 text-gray-900 hover:bg-purple-50">Brands</a>
+                <a href="{% url 'core:about' %}" class="block pl-3 pr-4 py-2 text-gray-900 hover:bg-purple-50">About</a>
+                <a href="{% url 'core:contact' %}" class="block pl-3 pr-4 py-2 text-gray-900 hover:bg-purple-50">Contact</a>
+            </div>
+            <div class="p-3">
+                <form action="{% url 'laptops:laptop_list' %}" method="get">
+                    <input type="text" name="q" placeholder="Search laptops..." 
+                           class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600">
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-1">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- About -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">LaptopXplorer</h3>
+                    <p class="text-gray-400 text-sm">
+                        Your ultimate destination for finding and comparing laptops. Make informed decisions with detailed specifications and comparisons.
+                    </p>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="{% url 'laptops:laptop_list' %}" class="text-gray-400 hover:text-white">Browse Laptops</a></li>
+                        <li><a href="{% url 'laptops:brand_list' %}" class="text-gray-400 hover:text-white">Brands</a></li>
+                        <li><a href="{% url 'laptops:compare' %}" class="text-gray-400 hover:text-white">Compare</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Support -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Support</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="{% url 'core:about' %}" class="text-gray-400 hover:text-white">About Us</a></li>
+                        <li><a href="{% url 'core:contact' %}" class="text-gray-400 hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Social -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Follow Us</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
+                <p>&copy; 2026 LaptopXplorer. All rights reserved. Built with Django &amp; Tailwind CSS.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

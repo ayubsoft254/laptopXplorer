@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+
+{% block title %}Browse Laptops - LaptopXplorer{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 min-h-screen">
+    <!-- Page Header -->
+    <div class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <h1 class="text-3xl font-bold text-gray-900">Browse Laptops</h1>
+            <p class="text-gray-600 mt-1">Find your perfect laptop from our comprehensive database</p>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Filters Sidebar -->
+            <div class="lg:w-64 flex-shrink-0">
+                <div class="bg-white rounded-lg shadow-md p-6 sticky top-20">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">Filters</h2>
+                    
+                    <form method="get" action="{% url 'laptops:laptop_list' %}">
+                        <!-- Search -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Search</label>
+                            <input type="text" name="q" value="{{ search_query }}" placeholder="Laptop name..."
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600">
+                        </div>
+
+                        <!-- Brand Filter -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Brand</label>
+                            <select name="brand" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600">
+                                <option value="">All Brands</option>
+                                {% for brand in brands %}
+                                <option value="{{ brand.id }}" {% if selected_brand == brand.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ brand.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Category Filter -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                            <select name="category" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600">
+                                <option value="">All Categories</option>
+                                {% for category in categories %}
+                                <option value="{{ category.id }}" {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Price Range -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Price Range</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="number" name="min_price" placeholder="Min" 
+                                       class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600">
+                                <input type="number" name="max_price" placeholder="Max"
+                                       class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600">
+                            </div>
+                        </div>
+
+                        <!-- RAM -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">RAM (GB)</label>
+                            <select name="ram" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600">
+                                <option value="">Any</option>
+                                <option value="4">4 GB</option>
+                                <option value="8">8 GB</option>
+                                <option value="16">16 GB</option>
+                                <option value="32">32 GB</option>
+                                <option value="64">64 GB+</option>
+                            </select>
+                        </div>
+
+                        <!-- Storage -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Min Storage (GB)</label>
+                            <select name="storage" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600">
+                                <option value="">Any</option>
+                                <option value="256">256 GB+</option>
+                                <option value="512">512 GB+</option>
+                                <option value="1024">1 TB+</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" 
+                                class="w-full bg-purple-600 text-white py-2 rounded-md hover:bg-purple-700 transition font-medium">
+                            Apply Filters
+                        </button>
+                        
+                        <a href="{% url 'laptops:laptop_list' %}" 
+                           class="block w-full text-center text-gray-600 py-2 mt-2 hover:text-purple-600">
+                            Clear Filters
+                        </a>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Laptops Grid -->
+            <div class="flex-1">
+                <!-- Sort and Count -->
+                <div class="flex justify-between items-center mb-6">
+                    <p class="text-gray-600">
+                        {% if page_obj %}
+                            Showing {{ page_obj.start_index }}-{{ page_obj.end_index }} of {{ page_obj.paginator.count }} laptops
+                        {% else %}
+                            No laptops found
+                        {% endif %}
+                    </p>
+                    
+                    <form method="get" class="flex items-center gap-2">
+                        {% for key, value in request.GET.items %}
+                            {% if key != 'sort' %}
+                                <input type="hidden" name="{{ key }}" value="{{ value }}">
+                            {% endif %}
+                        {% endfor %}
+                        <label class="text-sm text-gray-600">Sort by:</label>
+                        <select name="sort" onchange="this.form.submit()"
+                                class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600">
+                            <option value="-created_at" {% if sort_by == '-created_at' %}selected{% endif %}>Newest</option>
+                            <option value="price" {% if sort_by == 'price' %}selected{% endif %}>Price: Low to High</option>
+                            <option value="-price" {% if sort_by == '-price' %}selected{% endif %}>Price: High to Low</option>
+                            <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Name: A-Z</option>
+                        </select>
+                    </form>
+                </div>
+
+                <!-- Laptops Grid -->
+                {% if page_obj %}
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {% for laptop in page_obj %}
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition">
+                        <a href="{% url 'laptops:laptop_detail' laptop.slug %}">
+                            {% if laptop.image %}
+                            <img src="{{ laptop.image.url }}" alt="{{ laptop.name }}" class="w-full h-48 object-cover">
+                            {% else %}
+                            <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                                <i class="fas fa-laptop text-6xl text-gray-400"></i>
+                            </div>
+                            {% endif %}
+                        </a>
+                        
+                        <div class="p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-semibold text-purple-600">{{ laptop.brand.name }}</span>
+                                {% if not laptop.in_stock %}
+                                <span class="text-xs bg-red-100 text-red-600 px-2 py-1 rounded">Out of Stock</span>
+                                {% endif %}
+                            </div>
+                            
+                            <h3 class="text-lg font-bold text-gray-900 mb-2 line-clamp-2">
+                                <a href="{% url 'laptops:laptop_detail' laptop.slug %}" class="hover:text-purple-600">
+                                    {{ laptop.name }}
+                                </a>
+                            </h3>
+                            
+                            <div class="space-y-1 text-sm text-gray-600 mb-3">
+                                <div class="flex items-center">
+                                    <i class="fas fa-microchip w-4 mr-2"></i>
+                                    <span class="truncate">{{ laptop.processor.name|default:"N/A" }}</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-memory w-4 mr-2"></i>
+                                    {{ laptop.ram_info }}
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-hdd w-4 mr-2"></i>
+                                    {{ laptop.storage_info }}
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-desktop w-4 mr-2"></i>
+                                    {{ laptop.display_size }}" {{ laptop.display_resolution }}
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center pt-3 border-t border-gray-200">
+                                <div class="text-2xl font-bold text-purple-600">
+                                    ${{ laptop.price }}
+                                </div>
+                                <a href="{% url 'laptops:laptop_detail' laptop.slug %}" 
+                                   class="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition text-sm">
+                                    Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Pagination -->
+                {% if page_obj.has_other_pages %}
+                <div class="mt-8 flex justify-center">
+                    <nav class="flex items-center gap-2">
+                        {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                           class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
+                            Previous
+                        </a>
+                        {% endif %}
+                        
+                        <span class="px-4 py-2 text-gray-700">
+                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                        </span>
+                        
+                        {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                           class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
+                            Next
+                        </a>
+                        {% endif %}
+                    </nav>
+                </div>
+                {% endif %}
+                
+                {% else %}
+                <div class="bg-white rounded-lg shadow-md p-12 text-center">
+                    <i class="fas fa-laptop text-6xl text-gray-300 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">No Laptops Found</h3>
+                    <p class="text-gray-600 mb-4">Try adjusting your filters or search query</p>
+                    <a href="{% url 'laptops:laptop_list' %}" 
+                       class="inline-block bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700 transition">
+                        Clear All Filters
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

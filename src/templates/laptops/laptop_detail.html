@@ -1,0 +1,342 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ laptop.full_name }} - LaptopXplorer{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50">
+    <!-- Breadcrumb -->
+    <div class="bg-white border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center text-sm text-gray-600">
+                <a href="{% url 'core:home' %}" class="hover:text-purple-600">Home</a>
+                <i class="fas fa-chevron-right mx-2 text-xs"></i>
+                <a href="{% url 'laptops:laptop_list' %}" class="hover:text-purple-600">Laptops</a>
+                <i class="fas fa-chevron-right mx-2 text-xs"></i>
+                <a href="{% url 'laptops:brand_detail' laptop.brand.slug %}" class="hover:text-purple-600">{{ laptop.brand.name }}</a>
+                <i class="fas fa-chevron-right mx-2 text-xs"></i>
+                <span class="text-gray-900">{{ laptop.name }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid lg:grid-cols-3 gap-8">
+            <!-- Main Content -->
+            <div class="lg:col-span-2">
+                <!-- Laptop Header -->
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <span class="text-sm font-semibold text-purple-600">{{ laptop.brand.name }}</span>
+                            <h1 class="text-3xl font-bold text-gray-900 mt-1">{{ laptop.name }}</h1>
+                            {% if laptop.model_number %}
+                            <p class="text-gray-600 mt-1">Model: {{ laptop.model_number }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="text-right">
+                            <div class="text-3xl font-bold text-purple-600">${{ laptop.price }}</div>
+                            {% if laptop.in_stock %}
+                            <span class="inline-block mt-2 bg-green-100 text-green-800 text-sm px-3 py-1 rounded-full">
+                                <i class="fas fa-check-circle"></i> In Stock
+                            </span>
+                            {% else %}
+                            <span class="inline-block mt-2 bg-red-100 text-red-800 text-sm px-3 py-1 rounded-full">
+                                <i class="fas fa-times-circle"></i> Out of Stock
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Image -->
+                    <div class="mb-6">
+                        {% if laptop.image %}
+                        <img src="{{ laptop.image.url }}" alt="{{ laptop.name }}" class="w-full h-96 object-contain bg-gray-100 rounded-lg">
+                        {% else %}
+                        <div class="w-full h-96 bg-gray-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-laptop text-9xl text-gray-300"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        <div class="bg-purple-50 p-4 rounded-lg text-center">
+                            <i class="fas fa-microchip text-2xl text-purple-600 mb-2"></i>
+                            <div class="text-sm text-gray-600">Processor</div>
+                            <div class="font-semibold text-gray-900 text-sm mt-1">{{ laptop.processor.brand|default:"N/A" }}</div>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-lg text-center">
+                            <i class="fas fa-memory text-2xl text-purple-600 mb-2"></i>
+                            <div class="text-sm text-gray-600">RAM</div>
+                            <div class="font-semibold text-gray-900 text-sm mt-1">{{ laptop.ram_size }}GB</div>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-lg text-center">
+                            <i class="fas fa-hdd text-2xl text-purple-600 mb-2"></i>
+                            <div class="text-sm text-gray-600">Storage</div>
+                            <div class="font-semibold text-gray-900 text-sm mt-1">{{ laptop.storage_size }}GB</div>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-lg text-center">
+                            <i class="fas fa-desktop text-2xl text-purple-600 mb-2"></i>
+                            <div class="text-sm text-gray-600">Display</div>
+                            <div class="font-semibold text-gray-900 text-sm mt-1">{{ laptop.display_size }}"</div>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    {% if laptop.description %}
+                    <div class="border-t pt-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3">Description</h3>
+                        <p class="text-gray-700 leading-relaxed">{{ laptop.description }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Specifications -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Full Specifications</h2>
+
+                    <!-- Processor -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+                            <i class="fas fa-microchip text-purple-600 mr-2"></i> Processor
+                        </h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">Model:</span>
+                                <span class="font-medium">{{ laptop.processor.name|default:"N/A" }}</span>
+                            </div>
+                            {% if laptop.processor %}
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">Cores/Threads:</span>
+                                <span class="font-medium">{{ laptop.processor.cores }}/{{ laptop.processor.threads }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Memory -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+                            <i class="fas fa-memory text-purple-600 mr-2"></i> Memory (RAM)
+                        </h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">Size:</span>
+                                <span class="font-medium">{{ laptop.ram_size }}GB</span>
+                            </div>
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">Type:</span>
+                                <span class="font-medium">{{ laptop.ram_type }}</span>
+                            </div>
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">Upgradeable:</span>
+                                <span class="font-medium">{{ laptop.ram_upgradeable|yesno:"Yes,No" }}</span>
+                            </div>
+                            {% if laptop.max_ram %}
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">Max RAM:</span>
+                                <span class="font-medium">{{ laptop.max_ram }}GB</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Storage -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+                            <i class="fas fa-hdd text-purple-600 mr-2"></i> Storage
+                        </h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">Capacity:</span>
+                                <span class="font-medium">{{ laptop.storage_size }}GB</span>
+                            </div>
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">Type:</span>
+                                <span class="font-medium">{{ laptop.storage_type }}</span>
+                            </div>
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">Additional Slot:</span>
+                                <span class="font-medium">{{ laptop.additional_storage|yesno:"Yes,No" }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Display -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+                            <i class="fas fa-desktop text-purple-600 mr-2"></i> Display
+                        </h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">Size:</span>
+                                <span class="font-medium">{{ laptop.display_size }} inches</span>
+                            </div>
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">Resolution:</span>
+                                <span class="font-medium">{{ laptop.display_resolution }}</span>
+                            </div>
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">Refresh Rate:</span>
+                                <span class="font-medium">{{ laptop.refresh_rate }}Hz</span>
+                            </div>
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">Panel Type:</span>
+                                <span class="font-medium">{{ laptop.panel_type }}</span>
+                            </div>
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">Touchscreen:</span>
+                                <span class="font-medium">{{ laptop.touchscreen|yesno:"Yes,No" }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Graphics -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+                            <i class="fas fa-paint-brush text-purple-600 mr-2"></i> Graphics
+                        </h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">Type:</span>
+                                <span class="font-medium">{{ laptop.graphics_type }}</span>
+                            </div>
+                            {% if laptop.graphics_model %}
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">Model:</span>
+                                <span class="font-medium">{{ laptop.graphics_model }}</span>
+                            </div>
+                            {% endif %}
+                            {% if laptop.graphics_memory %}
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">VRAM:</span>
+                                <span class="font-medium">{{ laptop.graphics_memory }}GB</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Battery & Physical -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+                            <i class="fas fa-battery-full text-purple-600 mr-2"></i> Battery & Physical
+                        </h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            {% if laptop.battery_capacity %}
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">Battery:</span>
+                                <span class="font-medium">{{ laptop.battery_capacity }}Wh</span>
+                            </div>
+                            {% endif %}
+                            {% if laptop.battery_life %}
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">Battery Life:</span>
+                                <span class="font-medium">{{ laptop.battery_life }} hours</span>
+                            </div>
+                            {% endif %}
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">Weight:</span>
+                                <span class="font-medium">{{ laptop.weight }}kg</span>
+                            </div>
+                            {% if laptop.dimensions %}
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">Dimensions:</span>
+                                <span class="font-medium">{{ laptop.dimensions }}</span>
+                            </div>
+                            {% endif %}
+                            {% if laptop.color %}
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">Color:</span>
+                                <span class="font-medium">{{ laptop.color }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Connectivity -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+                            <i class="fas fa-wifi text-purple-600 mr-2"></i> Connectivity
+                        </h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">Wi-Fi:</span>
+                                <span class="font-medium">{{ laptop.wifi }}</span>
+                            </div>
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">Bluetooth:</span>
+                                <span class="font-medium">{{ laptop.bluetooth }}</span>
+                            </div>
+                            {% if laptop.webcam %}
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="text-gray-600">Webcam:</span>
+                                <span class="font-medium">{{ laptop.webcam }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% if laptop.ports %}
+                        <div class="mt-3">
+                            <span class="text-gray-600">Ports:</span>
+                            <p class="font-medium mt-1">{{ laptop.ports }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- OS -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+                            <i class="fas fa-laptop-code text-purple-600 mr-2"></i> Operating System
+                        </h3>
+                        <div class="flex justify-between border-b pb-2">
+                            <span class="text-gray-600">OS:</span>
+                            <span class="font-medium">{{ laptop.operating_system }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="lg:col-span-1">
+                <!-- Actions -->
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6 sticky top-20">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Actions</h3>
+                    <a href="{% url 'laptops:compare' %}?ids={{ laptop.id }}" 
+                       class="block w-full bg-purple-600 text-white text-center py-3 rounded-lg hover:bg-purple-700 transition mb-3">
+                        <i class="fas fa-balance-scale mr-2"></i> Add to Compare
+                    </a>
+                    <div class="text-sm text-gray-600 text-center">
+                        <i class="fas fa-eye mr-1"></i> {{ laptop.views }} views
+                    </div>
+                </div>
+
+                <!-- Similar Laptops -->
+                {% if similar_laptops %}
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Similar Laptops</h3>
+                    <div class="space-y-4">
+                        {% for similar in similar_laptops %}
+                        <a href="{% url 'laptops:laptop_detail' similar.slug %}" class="block hover:bg-gray-50 p-3 rounded-lg transition">
+                            <div class="flex gap-3">
+                                {% if similar.image %}
+                                <img src="{{ similar.image.url }}" alt="{{ similar.name }}" class="w-20 h-20 object-cover rounded">
+                                {% else %}
+                                <div class="w-20 h-20 bg-gray-200 rounded flex items-center justify-center">
+                                    <i class="fas fa-laptop text-2xl text-gray-400"></i>
+                                </div>
+                                {% endif %}
+                                <div class="flex-1">
+                                    <div class="text-xs text-purple-600 font-semibold">{{ similar.brand.name }}</div>
+                                    <div class="font-medium text-gray-900 text-sm line-clamp-2">{{ similar.name }}</div>
+                                    <div class="text-purple-600 font-bold text-sm mt-1">${{ similar.price }}</div>
+                                </div>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
