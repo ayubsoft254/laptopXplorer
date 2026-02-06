@@ -3,96 +3,215 @@
 {% block title %}LaptopXplorer - Find Your Perfect Laptop{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<div class="gradient-bg text-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div class="text-center">
-            <h1 class="text-5xl md:text-6xl font-bold mb-6">
-                Find Your Perfect Laptop
+<!-- Hero Section with Animated Background -->
+<div class="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
+    <!-- Animated Background -->
+    <div class="absolute inset-0 bg-gradient-to-br from-purple-900 via-black to-indigo-900">
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute top-0 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
+            <div class="absolute top-0 -right-4 w-72 h-72 bg-indigo-500 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
+            <div class="absolute -bottom-8 left-20 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
+        </div>
+    </div>
+    
+    <!-- Grid Pattern Overlay -->
+    <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
+    
+    <!-- Hero Content -->
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+        <div class="space-y-8 animate-fade-in-up">
+            <!-- Glowing Badge -->
+            <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-purple-200 text-sm font-medium">
+                <span class="relative flex h-2 w-2 mr-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+                </span>
+                50+ Premium Laptops Available
+            </div>
+            
+            <!-- Main Heading -->
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-tight tracking-tight">
+                Find Your
+                <span class="block bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent animate-gradient">
+                    Perfect Laptop
+                </span>
             </h1>
-            <p class="text-xl md:text-2xl mb-8 text-purple-100">
-                Compare specs, read reviews, and make informed decisions
+            
+            <p class="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                Compare specs, prices, and features across all major brands.
+                <span class="block mt-2 text-purple-300">Powered by cutting-edge technology.</span>
             </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="{% url 'laptops:laptop_list' %}" class="bg-white text-purple-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
-                    Browse Laptops
+            
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
+                <a href="{% url 'laptops:laptop_list' %}" 
+                   class="group relative px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-2xl font-bold text-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/50">
+                    <span class="relative z-10 flex items-center">
+                        Explore Now
+                        <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                        </svg>
+                    </span>
+                    <div class="absolute inset-0 bg-gradient-to-r from-purple-700 to-indigo-700 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 </a>
-                <a href="{% url 'laptops:compare' %}" class="bg-purple-700 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-800 transition">
-                    Compare Now
+                
+                <a href="{% url 'core:about' %}" 
+                   class="group px-8 py-4 bg-white/10 backdrop-blur-md border-2 border-white/20 text-white rounded-2xl font-bold text-lg hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                    <span class="flex items-center">
+                        Learn More
+                        <svg class="w-5 h-5 ml-2 group-hover:rotate-45 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </span>
                 </a>
+            </div>
+            
+            <!-- Stats -->
+            <div class="grid grid-cols-3 gap-8 max-w-2xl mx-auto pt-16">
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-white mb-2">50+</div>
+                    <div class="text-sm text-gray-400 uppercase tracking-wider">Laptops</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-white mb-2">8</div>
+                    <div class="text-sm text-gray-400 uppercase tracking-wider">Brands</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-white mb-2">6</div>
+                    <div class="text-sm text-gray-400 uppercase tracking-wider">Categories</div>
+                </div>
             </div>
         </div>
     </div>
+    
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <svg class="w-6 h-6 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+        </svg>
+    </div>
 </div>
 
-<!-- Categories Section -->
+<!-- Categories Section with Glassmorphism -->
 {% if categories %}
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Browse by Category</h2>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-        {% for category in categories %}
-        <a href="{% url 'laptops:laptop_list' %}?category={{ category.id }}" 
-           class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition text-center hover-scale">
-            <div class="text-4xl mb-3">
-                {% if category.icon %}
-                    <i class="{{ category.icon }}"></i>
-                {% else %}
-                    <i class="fas fa-laptop"></i>
-                {% endif %}
-            </div>
-            <h3 class="font-semibold text-lg text-gray-900">{{ category.name }}</h3>
-        </a>
-        {% endfor %}
+<div class="relative py-24 bg-gradient-to-b from-gray-50 to-white overflow-hidden">
+    <!-- Decorative Elements -->
+    <div class="absolute top-0 right-0 w-96 h-96 bg-purple-200 rounded-full filter blur-3xl opacity-20 -translate-y-1/2 translate-x-1/2"></div>
+    <div class="absolute bottom-0 left-0 w-96 h-96 bg-indigo-200 rounded-full filter blur-3xl opacity-20 translate-y-1/2 -translate-x-1/2"></div>
+    
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-5xl font-black text-gray-900 mb-4">
+                Browse by
+                <span class="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Category</span>
+            </h2>
+            <p class="text-xl text-gray-600">Find exactly what you're looking for</p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            {% for category in categories %}
+            <a href="{% url 'laptops:laptop_list' %}?category={{ category.id }}" 
+               class="group relative bg-white/60 backdrop-blur-lg rounded-2xl p-8 text-center transition-all duration-300 hover:scale-105 hover:shadow-2xl border border-white/20 hover:bg-white/80">
+                <div class="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-indigo-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="relative">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center transform group-hover:rotate-12 transition-transform">
+                        <i class="{{ category.icon }} text-3xl text-white"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-900 text-lg mb-1">{{ category.name }}</h3>
+                    <p class="text-sm text-gray-500">Explore now</p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
     </div>
 </div>
 {% endif %}
 
-<!-- Featured Laptops -->
+<!-- Featured Laptops with Modern Cards -->
 {% if featured_laptops %}
-<div class="bg-gray-100 py-16">
+<div class="relative bg-gradient-to-b from-white to-gray-50 py-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center mb-8">
-            <h2 class="text-3xl font-bold text-gray-900">Featured Laptops</h2>
-            <a href="{% url 'laptops:laptop_list' %}" class="text-purple-600 hover:text-purple-700 font-semibold">
-                View All <i class="fas fa-arrow-right ml-1"></i>
+        <div class="flex justify-between items-end mb-16">
+            <div>
+                <h2 class="text-5xl font-black text-gray-900 mb-2">
+                    Featured
+                    <span class="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Collection</span>
+                </h2>
+                <p class="text-xl text-gray-600">Handpicked premium laptops</p>
+            </div>
+            <a href="{% url 'laptops:laptop_list' %}" 
+               class="group flex items-center text-purple-600 hover:text-purple-700 font-bold text-lg">
+                View All
+                <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                </svg>
             </a>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {% for laptop in featured_laptops %}
-            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition hover-scale">
-                <a href="{% url 'laptops:laptop_detail' laptop.slug %}">
-                    {% if laptop.image %}
-                    <img src="{{ laptop.image.url }}" alt="{{ laptop.name }}" class="w-full h-48 object-cover">
-                    {% else %}
-                    <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
-                        <i class="fas fa-laptop text-6xl text-gray-400"></i>
-                    </div>
-                    {% endif %}
-                </a>
+            <div class="group relative bg-white rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+                <!-- Gradient Border Effect -->
+                <div class="absolute inset-0 bg-gradient-to-br from-purple-500 via-indigo-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
+                <div class="absolute inset-[2px] bg-white rounded-3xl"></div>
                 
-                <div class="p-6">
-                    <div class="text-sm text-purple-600 font-semibold mb-2">{{ laptop.brand.name }}</div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-2">
-                        <a href="{% url 'laptops:laptop_detail' laptop.slug %}" class="hover:text-purple-600">
-                            {{ laptop.name }}
-                        </a>
-                    </h3>
-                    
-                    <div class="space-y-1 text-sm text-gray-600 mb-4">
-                        <div><i class="fas fa-microchip w-4"></i> {{ laptop.processor.name|default:"N/A" }}</div>
-                        <div><i class="fas fa-memory w-4"></i> {{ laptop.ram_info }}</div>
-                        <div><i class="fas fa-hdd w-4"></i> {{ laptop.storage_info }}</div>
-                    </div>
-                    
-                    <div class="flex justify-between items-center">
-                        <div class="text-2xl font-bold text-purple-600">
-                            ${{ laptop.price }}
+                <div class="relative">
+                    <a href="{% url 'laptops:laptop_detail' laptop.slug %}" class="block">
+                        <div class="relative overflow-hidden h-56 bg-gradient-to-br from-gray-50 to-gray-100">
+                            {% if laptop.image %}
+                            <img src="{{ laptop.image.url }}" alt="{{ laptop.name }}" 
+                                 class="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform duration-500">
+                            {% else %}
+                            <div class="flex items-center justify-center h-full">
+                                <i class="fas fa-laptop text-8xl text-gray-300 group-hover:text-purple-300 transition-colors"></i>
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Floating Badge -->
+                            <div class="absolute top-4 right-4 px-3 py-1 bg-purple-600 text-white text-xs font-bold rounded-full">
+                                NEW
+                            </div>
                         </div>
-                        <a href="{% url 'laptops:laptop_detail' laptop.slug %}" 
-                           class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition text-sm">
-                            View Details
-                        </a>
+                    </a>
+                    
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs font-bold rounded-lg">
+                                {{ laptop.brand.name }}
+                            </span>
+                            <span class="text-xs text-gray-400">{{ laptop.category.name }}</span>
+                        </div>
+                        
+                        <h3 class="text-lg font-bold text-gray-900 mb-3 line-clamp-2 min-h-[3.5rem]">
+                            <a href="{% url 'laptops:laptop_detail' laptop.slug %}" 
+                               class="hover:text-purple-600 transition-colors">
+                                {{ laptop.name }}
+                            </a>
+                        </h3>
+                        
+                        <div class="space-y-2 mb-4 text-sm text-gray-600">
+                            <div class="flex items-center">
+                                <i class="fas fa-microchip w-5 text-purple-500"></i>
+                                <span class="ml-2 truncate">{{ laptop.processor.name|default:"N/A" }}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-memory w-5 text-purple-500"></i>
+                                <span class="ml-2">{{ laptop.ram_size }}GB RAM</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+                            <div>
+                                <div class="text-sm text-gray-500">Starting at</div>
+                                <div class="text-2xl font-black bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                                    ${{ laptop.price }}
+                                </div>
+                            </div>
+                            <a href="{% url 'laptops:laptop_detail' laptop.slug %}" 
+                               class="w-10 h-10 flex items-center justify-center bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-colors group-hover:scale-110 duration-300">
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -104,52 +223,77 @@
 
 <!-- Brands Section -->
 {% if brands %}
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Popular Brands</h2>
-    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-6">
-        {% for brand in brands %}
-        <a href="{% url 'laptops:brand_detail' brand.slug %}" 
-           class="bg-white p-4 rounded-lg shadow-md hover:shadow-xl transition flex items-center justify-center hover-scale">
-            {% if brand.logo %}
-            <img src="{{ brand.logo.url }}" alt="{{ brand.name }}" class="h-12 object-contain">
-            {% else %}
-            <span class="font-semibold text-gray-700">{{ brand.name }}</span>
-            {% endif %}
-        </a>
-        {% endfor %}
+<div class="bg-white py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-5xl font-black text-gray-900 mb-4">
+                Trusted
+                <span class="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Brands</span>
+            </h2>
+            <p class="text-xl text-gray-600">We feature the industry's leading manufacturers</p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {% for brand in brands %}
+            <a href="{% url 'laptops:brand_detail' brand.slug %}" 
+               class="group relative p-8 bg-gradient-to-br from-gray-50 to-white rounded-2xl hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-purple-300">
+                <div class="flex flex-col items-center">
+                    {% if brand.logo %}
+                    <img src="{{ brand.logo.url }}" alt="{{ brand.name }}" class="h-16 mb-4 group-hover:scale-110 transition-transform">
+                    {% else %}
+                    <i class="fas fa-building text-5xl text-purple-600 mb-4"></i>
+                    {% endif %}
+                    <h3 class="font-bold text-gray-900 text-lg mb-2">{{ brand.name }}</h3>
+                    <p class="text-sm text-gray-500 text-center line-clamp-2">{{ brand.description|truncatewords:8 }}</p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
     </div>
 </div>
 {% endif %}
 
-<!-- Features Section -->
-<div class="bg-gray-900 text-white py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl font-bold mb-12 text-center">Why Choose LaptopXplorer?</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="text-center">
-                <div class="text-5xl mb-4 text-purple-400">
-                    <i class="fas fa-database"></i>
-                </div>
-                <h3 class="text-xl font-semibold mb-2">Comprehensive Database</h3>
-                <p class="text-gray-400">Detailed specifications for laptops across all major brands</p>
-            </div>
-            
-            <div class="text-center">
-                <div class="text-5xl mb-4 text-purple-400">
-                    <i class="fas fa-search"></i>
-                </div>
-                <h3 class="text-xl font-semibold mb-2">Advanced Search</h3>
-                <p class="text-gray-400">Filter by brand, price, specs, and more to find exactly what you need</p>
-            </div>
-            
-            <div class="text-center">
-                <div class="text-5xl mb-4 text-purple-400">
-                    <i class="fas fa-balance-scale"></i>
-                </div>
-                <h3 class="text-xl font-semibold mb-2">Easy Comparison</h3>
-                <p class="text-gray-400">Compare multiple laptops side-by-side to make the best choice</p>
-            </div>
-        </div>
-    </div>
-</div>
+<style>
+@keyframes blob {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+}
+@keyframes gradient {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.animate-blob {
+    animation: blob 7s infinite;
+}
+.animation-delay-2000 {
+    animation-delay: 2s;
+}
+.animation-delay-4000 {
+    animation-delay: 4s;
+}
+.animate-gradient {
+    background-size: 200% auto;
+    animation: gradient 3s ease infinite;
+}
+.animate-fade-in-up {
+    animation: fade-in-up 1s ease-out;
+}
+.bg-grid-pattern {
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+}
+</style>
 {% endblock %}
