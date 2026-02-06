@@ -12,7 +12,7 @@
     <meta name="robots" content="index, follow">
     
     <!-- Open Graph Meta Tags (Facebook, LinkedIn) -->
-    <meta property="og:title" content="{% block og_title %}{% block title_text %}LaptopXplorer - Find Your Perfect Laptop{% endblock %}{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}LaptopXplorer - Find Your Perfect Laptop{% endblock %}">
     <meta property="og:description" content="{% block og_description %}Compare and find the perfect laptop with expert reviews and detailed specs.{% endblock %}">
     <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}/static/og-image.jpg{% endblock %}">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
@@ -21,7 +21,7 @@
     
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{% block twitter_title %}{% block title_text %}LaptopXplorer - Find Your Perfect Laptop{% endblock %}{% endblock %}">
+    <meta name="twitter:title" content="{% block twitter_title %}LaptopXplorer - Find Your Perfect Laptop{% endblock %}">
     <meta name="twitter:description" content="{% block twitter_description %}Compare and find the perfect laptop with expert reviews and detailed specs.{% endblock %}">
     <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}/static/og-image.jpg{% endblock %}">
     
