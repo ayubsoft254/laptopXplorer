@@ -30,16 +30,16 @@ This project represents a complete journey from concept to production deployment
 ### 📸 Screenshots
 
 **Homepage - Futuristic Design**
-![Homepage with gradient hero section and featured laptops](your-screenshot-url-here)
+![Homepage with gradient hero section and featured laptops](https://drive.google.com/uc?export=view&id=1wODgNBIKH8nWuPpBk7_hHBDAXoUGl7Oa)
 
 **Laptop Detail - Multi-Image Gallery**
-![Laptop detail page showing multiple product images and specifications](your-screenshot-url-here)
+![Laptop detail page showing multiple product images and specifications](your-laptop-detail-screenshot)
 
 **Article System**
-![Tech articles and buying guides section](your-screenshot-url-here)
+![Tech articles and buying guides section](your-article-screenshot)
 
 **Admin Panel**
-![Django admin interface for content management](your-screenshot-url-here)
+![Django admin interface for content management](your-admin-screenshot)
 
 ### 🎥 Video Walkthrough
 [Link to video demo or GIF walkthrough]
@@ -183,7 +183,7 @@ This project went from concept to production deployment in **record time**, and 
 ### 🔗 Project Links
 
 - **Live Site**: https://laptopxplorer.ayubsoft-inc.systems
-- **GitHub Repository**: [your-repo-url]
+- **GitHub Repository**: https://github.com/ayubsoft254/laptopXplorer
 - **Documentation**: See README.md, SEO_GUIDE.md, UBUNTU_DEPLOY.md in repo
 
 ### 📚 Project Structure

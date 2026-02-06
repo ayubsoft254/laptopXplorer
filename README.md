@@ -1,20 +1,30 @@
-# LaptopXplorer
+# 💻 LaptopXplorer
 
-A web-based platform for exploring and comparing laptops, inspired by GSMArena. Built with Django and Tailwind CSS.
+A modern Django-based laptop marketplace platform with advanced filtering, multi-image galleries, article system, and futuristic UI design.
+
+**🌐 Live Demo**: https://laptopxplorer.ayubsoft-inc.systems  
+**📦 Repository**: https://github.com/ayubsoft254/laptopXplorer
+
+> Built with GitHub Copilot CLI for the [GitHub Copilot CLI Challenge](https://dev.to/challenges/github-2026-01-21)
 
 ## Features
 
-- **Comprehensive Laptop Database** - Detailed specifications for laptops across multiple brands
-- **Advanced Search & Filtering** - Search by brand, price, specifications, and more
-- **Comparison Tool** - Compare multiple laptops side by side
-- **Responsive Design** - Built with Tailwind CSS for a sleek, mobile-friendly interface
-- **Admin Dashboard** - Manage laptop database efficiently
+- **Comprehensive Laptop Catalog** - Browse laptops with detailed specifications and multiple images
+- **Multi-Image Galleries** - Each laptop showcases multiple product images
+- **Advanced Filtering** - Filter by brand, category, price range, and specifications
+- **Article System** - Tech news and laptop buying guides with full CRUD capabilities
+- **SEO Optimized** - XML sitemaps, Schema.org structured data, Open Graph tags
+- **Futuristic UI** - Gradient-heavy design with smooth animations
+- **Responsive Design** - Mobile-friendly interface
+- **Admin Dashboard** - Comprehensive content management
 
 ## Tech Stack
 
-- **Backend:** Django 5.0.7
-- **Frontend:** HTML, Tailwind CSS
-- **Database:** SQLite (development)
+- **Backend:** Django 5.0.7, Python 3.12
+- **Frontend:** HTML5, CSS3 (Custom futuristic design)
+- **Database:** SQLite (development), PostgreSQL-ready
+- **Deployment:** Docker, Docker Compose, Gunicorn, Nginx
+- **Server:** Ubuntu 22.04 LTS with SSL (Let's Encrypt)
 
 ## Setup Instructions
 
