@@ -146,16 +146,26 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR.parent / 'staticfiles'  # Changed for Docker
+STATIC_URL = '/static/'
+
+# Directories where Django will look for static files
+STATICFILES_DIRS = [BASE_DIR / 'static'] if (BASE_DIR / 'static').exists() else []
+
+# Directory where collectstatic will collect all static files
+STATIC_ROOT = BASE_DIR.parent / 'staticfiles'
 
 # Media files (User uploads)
-MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR.parent / 'mediafiles'  # Changed for Docker
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR.parent / 'mediafiles'
 
-# WhiteNoise configuration for static files
+# WhiteNoise configuration for serving static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Additional locations of static files
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
