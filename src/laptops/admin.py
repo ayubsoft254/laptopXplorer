@@ -1,5 +1,12 @@
 from django.contrib import admin
-from .models import Brand, Category, Processor, Laptop, Review, Article, PriceHistory, PriceAlert
+from .models import Brand, Category, Processor, Laptop, Review, Article, PriceHistory, PriceAlert, LaptopImage
+
+
+class LaptopImageInline(admin.TabularInline):
+    model = LaptopImage
+    extra = 3
+    fields = ['image', 'caption', 'is_primary', 'order']
+    readonly_fields = []
 
 
 @admin.register(Brand)
@@ -33,6 +40,7 @@ class LaptopAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'updated_at', 'views']
     list_editable = ['in_stock']
     list_per_page = 25
+    inlines = [LaptopImageInline]  # Add image gallery inline
     
     fieldsets = (
         ('Basic Information', {
@@ -152,6 +160,16 @@ class PriceAlertAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+
+
+@admin.register(LaptopImage)
+class LaptopImageAdmin(admin.ModelAdmin):
+    list_display = ['laptop', 'caption', 'is_primary', 'order', 'uploaded_at']
+    list_filter = ['is_primary', 'uploaded_at']
+    search_fields = ['laptop__name', 'caption']
+    list_editable = ['is_primary', 'order']
+    readonly_fields = ['uploaded_at']
+    list_per_page = 50
     
     fieldsets = (
         ('Article Information', {

@@ -38,13 +38,31 @@
                         </div>
                     </div>
 
-                    <!-- Image -->
+                    <!-- Image Gallery -->
                     <div class="mb-6">
-                        {% if laptop.image %}
-                        <img src="{{ laptop.image.url }}" alt="{{ laptop.name }}" class="w-full h-96 object-contain bg-gray-100 rounded-lg">
-                        {% else %}
-                        <div class="w-full h-96 bg-gray-100 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-laptop text-9xl text-gray-300"></i>
+                        <!-- Main Image -->
+                        <div class="mb-4">
+                            {% if laptop.primary_image %}
+                            <img src="{{ laptop.primary_image.url }}" alt="{{ laptop.name }}" 
+                                 id="mainImage"
+                                 class="w-full h-96 object-contain bg-gray-100 rounded-lg">
+                            {% else %}
+                            <div class="w-full h-96 bg-gray-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-laptop text-9xl text-gray-300"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Thumbnail Gallery -->
+                        {% if laptop.images.count > 1 %}
+                        <div class="grid grid-cols-4 md:grid-cols-6 gap-2">
+                            {% for img in laptop.images.all %}
+                            <div class="cursor-pointer rounded-lg overflow-hidden border-2 {% if img.is_primary %}border-purple-600{% else %}border-gray-200 hover:border-purple-400{% endif %} transition"
+                                 onclick="changeImage('{{ img.image.url }}', this)">
+                                <img src="{{ img.image.url }}" alt="{{ img.caption }}" 
+                                     class="w-full h-20 object-cover">
+                            </div>
+                            {% endfor %}
                         </div>
                         {% endif %}
                     </div>

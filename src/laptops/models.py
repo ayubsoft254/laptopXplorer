@@ -256,6 +256,24 @@ class Laptop(models.Model):
             if old_price > 0:
                 return ((new_price - old_price) / old_price) * 100
         return 0
+    
+    @property
+    def primary_image(self):
+        """Get the primary display image"""
+        primary = self.images.filter(is_primary=True).first()
+        if primary:
+            return primary.image
+        # Fallback to first image if no primary set
+        first_image = self.images.first()
+        if first_image:
+            return first_image.image
+        # Finally fallback to the old single image field
+        return self.image
+    
+    @property
+    def gallery_images(self):
+        """Get all gallery images excluding primary"""
+        return self.images.filter(is_primary=False)
 
 
 class Review(models.Model):
@@ -334,6 +352,33 @@ class Article(models.Model):
 
 # Price Tracking Models
 from django.utils import timezone
+
+from django.contrib.auth.models import User
+
+
+class LaptopImage(models.Model):
+    """Multiple images for a laptop (gallery)"""
+    laptop = models.ForeignKey(Laptop, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='laptop_gallery/')
+    caption = models.CharField(max_length=200, blank=True)
+    is_primary = models.BooleanField(default=False, help_text="Main display image")
+    order = models.PositiveIntegerField(default=0, help_text="Display order")
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-is_primary', 'order', '-uploaded_at']
+        verbose_name = 'Laptop Image'
+        verbose_name_plural = 'Laptop Images'
+    
+    def __str__(self):
+        return f"{self.laptop.name} - Image {self.order}"
+    
+    def save(self, *args, **kwargs):
+        # If this is marked as primary, unmark others for this laptop
+        if self.is_primary:
+            LaptopImage.objects.filter(laptop=self.laptop, is_primary=True).update(is_primary=False)
+        super().save(*args, **kwargs)
+
 
 class PriceHistory(models.Model):
     """Track price changes over time"""
