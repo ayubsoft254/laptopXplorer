@@ -128,14 +128,14 @@ def laptop_list(request):
     )
     
     # Get unique RAM and storage options
-    ram_options = sorted(Laptop.objects.values_list('ram_size', flat=True).distinct())
-    storage_options = sorted(Laptop.objects.values_list('storage_size', flat=True).distinct())
+    ram_options = sorted(set(filter(None, Laptop.objects.values_list('ram_size', flat=True).distinct())))
+    storage_options = sorted(set(filter(None, Laptop.objects.values_list('storage_size', flat=True).distinct())))
     
     # Get unique graphics types
-    graphics_options = Laptop.objects.values_list('graphics_type', flat=True).distinct()
+    graphics_options = sorted(set(filter(None, Laptop.objects.values_list('graphics_type', flat=True).distinct())))
     
     # Get unique OS options
-    os_options = Laptop.objects.values_list('operating_system', flat=True).distinct()
+    os_options = sorted(set(filter(None, Laptop.objects.values_list('operating_system', flat=True).distinct())))
     
     context = {
         'page_obj': page_obj,
