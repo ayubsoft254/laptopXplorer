@@ -673,5 +673,28 @@ function clearCompare() {
     
     updateCompareUI();
 }
+
+// Image Gallery Functions
+function changeImage(imageUrl, thumbnail) {
+    // Update main image
+    document.getElementById('mainImage').src = imageUrl;
+    
+    // Update thumbnail borders
+    const thumbnails = document.querySelectorAll('.grid > div');
+    thumbnails.forEach(thumb => {
+        thumb.classList.remove('border-purple-600');
+        thumb.classList.add('border-gray-200');
+    });
+    
+    // Highlight selected thumbnail
+    thumbnail.classList.remove('border-gray-200');
+    thumbnail.classList.add('border-purple-600');
+}
+
+    btn.classList.add('bg-purple-600', 'hover:bg-purple-700');
+    btn.innerHTML = '<i class="fas fa-balance-scale mr-2"></i> Add to Compare';
+    
+    updateCompareUI();
+}
 </script>
 {% endblock %}

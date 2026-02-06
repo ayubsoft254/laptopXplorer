@@ -302,8 +302,8 @@
                     {% for laptop in page_obj %}
                     <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group">
                         <div class="relative">
-                            {% if laptop.image %}
-                            <img src="{{ laptop.image.url }}" alt="{{ laptop.name }}" 
+                            {% if laptop.primary_image %}
+                            <img src="{{ laptop.primary_image.url }}" alt="{{ laptop.name }}" 
                                  class="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300">
                             {% else %}
                             <div class="w-full h-56 bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center">
