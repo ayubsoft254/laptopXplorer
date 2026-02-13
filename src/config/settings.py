@@ -27,12 +27,12 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-j8c)k#c6w14^dfoac0ou&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,laptopxplorer.ayubsoft-inc.systems', cast=lambda v: [s.strip() for s in v.split(',')])
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,laptopxplorer.ayubsoft-inc.systems, laptopxplorer.onrender.com', cast=lambda v: [s.strip() for s in v.split(',')])
 
 # CSRF Trusted Origins (for Django 4.0+)
 CSRF_TRUSTED_ORIGINS = config(
     'CSRF_TRUSTED_ORIGINS',
-    default='http://localhost:1480,http://127.0.0.1:1480,http://laptopxplorer.ayubsoft-inc.systems,https://laptopxplorer.ayubsoft-inc.systems',
+    default='http://localhost:1480,http://127.0.0.1:1480,http://laptopxplorer.ayubsoft-inc.systems,https://laptopxplorer.ayubsoft-inc.systems,https://laptopxplorer.onrender.com',
     cast=lambda v: [s.strip() for s in v.split(',')]
 )
 
